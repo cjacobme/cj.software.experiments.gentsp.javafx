@@ -31,6 +31,8 @@ public class GenTspMainController {
         Optional<ProblemSetup> optionalProblemSetup = newProblemDialog.showAndWait();
         if (optionalProblemSetup.isPresent()) {
             logger.info("new problem was set up");
+            ProblemSetup instance = optionalProblemSetup.get();
+            logger.info("%30s = %d", "number of cities", instance.getNumCities());
         } else {
             logger.info("dialog was closed");
         }
