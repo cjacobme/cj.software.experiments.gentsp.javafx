@@ -11,9 +11,12 @@ public class NewProblemDialog extends Dialog<ProblemSetup> {
         setTitle("Setup a new Travalling Salesperson Problem");
         setResizable(true);
         DialogPane dialogPane = getDialogPane();
-
+        PositiveIntegerStringConverter posConverter = new PositiveIntegerStringConverter();
+        PositiveIntegerFilter posFilter = new PositiveIntegerFilter();
+        TextFormatter<Integer> numCitiesFormatter = new TextFormatter<>(posConverter, 100, posFilter);
         Label numCitiesLabel = new Label("number of cities:");
         TextField numCities = new TextField();
+        numCities.setTextFormatter(numCitiesFormatter);
 
         GridPane gridPane = new GridPane();
         gridPane.add(numCitiesLabel, 1, 1);
