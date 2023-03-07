@@ -3,6 +3,8 @@ package cj.software.experiments.gentsp.javafx;
 import cj.software.experiments.gentsp.entity.ProblemSetup;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +21,7 @@ public class GenTspMainController {
     @Autowired
     private ConfigurableApplicationContext applicationContext;
     private final Logger logger = LogManager.getFormatterLogger();
+
     @FXML
     public void exitApplication() {
         logger.info("exiting now...");
@@ -27,14 +30,15 @@ public class GenTspMainController {
 
     @FXML
     public void newProblem() {
-        NewProblemDialog newProblemDialog = new NewProblemDialog();
-        Optional<ProblemSetup> optionalProblemSetup = newProblemDialog.showAndWait();
+        Window owner = Stage.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null);
+        FxmlNewProblemDialog dialog = new FxmlNewProblemDialog(applicationContext, owner);
+        Optional<ProblemSetup> optionalProblemSetup = dialog.showAndWait();
         if (optionalProblemSetup.isPresent()) {
-            logger.info("new problem was set up");
-            ProblemSetup instance = optionalProblemSetup.get();
-            logger.info("%30s = %d", "number of cities", instance.getNumCities());
+            logger.info("new problem setup was defined");
+            ProblemSetup problemSetup = optionalProblemSetup.get();
+            logger.info("%30s=%d", "number of cities", problemSetup.getNumCities());
         } else {
-            logger.info("dialog was closed");
+            logger.info("that was cancelled");
         }
     }
 }
