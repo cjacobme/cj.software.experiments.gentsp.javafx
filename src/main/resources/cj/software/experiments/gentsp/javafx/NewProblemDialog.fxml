@@ -4,18 +4,20 @@
 <?import javafx.scene.layout.*?>
 
 <DialogPane prefWidth="500" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="cj.software.experiments.gentsp.javafx.NewProblemController">
+            fx:controller="cj.software.experiments.gentsp.javafx.NewProblemController">
     <content>
         <GridPane hgap="5" vgap="5">
-            <Label text="number of cities" />
-         <TextField fx:id="tfNumberCities" GridPane.columnIndex="1" />
-         <columnConstraints>
-            <ColumnConstraints />
-            <ColumnConstraints hgrow="ALWAYS"/>
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints />
-         </rowConstraints>
+            <Label text="number of cities"/>
+            <TextField fx:id="tfNumberCities" GridPane.columnIndex="1"/>
+            <Label text="population size" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfPopulationSize" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+            </rowConstraints>
         </GridPane>
     </content>
 

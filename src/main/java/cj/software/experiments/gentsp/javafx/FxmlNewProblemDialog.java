@@ -34,11 +34,11 @@ public class FxmlNewProblemDialog extends Dialog<ProblemSetup> {
                     ProblemSetup result;
                     ButtonBar.ButtonData buttonData = buttonType.getButtonData();
                     if (buttonData.equals(ButtonBar.ButtonData.OK_DONE)) {
-                        String numCitiesString = newProblemController.getTfNumberCities().getText();
-                        int numCities = Integer.parseInt(numCitiesString);
+                        int numCities = newProblemController.getNumberCities();
+                        int populationSize = newProblemController.getPopulationSize();
                         result = new ProblemSetup(
                                 numCities,
-                                100,
+                                populationSize,
                                 10000,
                                 2,
                                 0.9,

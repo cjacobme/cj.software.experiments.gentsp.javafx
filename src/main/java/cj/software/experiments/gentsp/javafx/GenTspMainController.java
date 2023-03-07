@@ -17,6 +17,7 @@ import java.util.Optional;
 @Component
 @FxmlView("GenTspMain.fxml")
 public class GenTspMainController {
+    private static final String INT_FORMAT = "%30s = %d";
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
@@ -36,7 +37,8 @@ public class GenTspMainController {
         if (optionalProblemSetup.isPresent()) {
             logger.info("new problem setup was defined");
             ProblemSetup problemSetup = optionalProblemSetup.get();
-            logger.info("%30s=%d", "number of cities", problemSetup.getNumCities());
+            logger.info(INT_FORMAT, "number of cities", problemSetup.getNumCities());
+            logger.info(INT_FORMAT, "population size", problemSetup.getPopulationSize());
         } else {
             logger.info("that was cancelled");
         }

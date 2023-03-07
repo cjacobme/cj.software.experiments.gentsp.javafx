@@ -1,5 +1,6 @@
 package cj.software.experiments.gentsp.javafx;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -17,9 +18,20 @@ public class NewProblemController implements Initializable {
     @FXML
     private TextField tfNumberCities;
 
+    @FXML
+    private TextField tfPopulationSize;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initInt(tfNumberCities, 100);
+        initInt(tfPopulationSize, 100);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tfNumberCities.requestFocus();
+            }
+        });
     }
 
     private void initInt(TextField textField, int value) {
@@ -29,7 +41,17 @@ public class NewProblemController implements Initializable {
         textField.setTextFormatter(formatter);
     }
 
-    public TextField getTfNumberCities() {
-        return tfNumberCities;
+    public int getNumberCities() {
+        return getInt(tfNumberCities);
+    }
+
+    public int getPopulationSize() {
+        return getInt(tfPopulationSize);
+    }
+
+    private int getInt(TextField source) {
+        String content = source.getText();
+        int result = Integer.parseInt(content);
+        return result;
     }
 }
