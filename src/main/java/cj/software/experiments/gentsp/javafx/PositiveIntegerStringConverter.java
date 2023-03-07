@@ -15,10 +15,14 @@ public class PositiveIntegerStringConverter extends IntegerStringConverter {
     @Override
     public String toString(Integer value) {
         String result;
-        if (value < 0) {
-            result = "0";
+        if (value != null) {
+            if (value < 0) {
+                result = "0";
+            } else {
+                result = super.toString(value);
+            }
         } else {
-            result = super.toString(value);
+            result = "0";
         }
         return result;
     }

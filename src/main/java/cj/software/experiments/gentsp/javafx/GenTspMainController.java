@@ -19,6 +19,8 @@ import java.util.Optional;
 public class GenTspMainController {
     private static final String INT_FORMAT = "%30s = %d";
 
+    private static final String DOUBLE_FORMAT = "%30s = %10.4f";
+
     @Autowired
     private ConfigurableApplicationContext applicationContext;
     private final Logger logger = LogManager.getFormatterLogger();
@@ -41,6 +43,9 @@ public class GenTspMainController {
             logger.info(INT_FORMAT, "population size", problemSetup.getPopulationSize());
             logger.info(INT_FORMAT, "number of cycles", problemSetup.getMaxGenerations());
             logger.info(INT_FORMAT, "elitism count", problemSetup.getElitismCount());
+            logger.info(DOUBLE_FORMAT, "crossover rate", problemSetup.getCrossoverRate());
+            logger.info(INT_FORMAT, "tournament size", problemSetup.getTournamentSize());
+            logger.info(DOUBLE_FORMAT, "mutation rate", problemSetup.getMutationRate());
         } else {
             logger.info("that was cancelled");
         }

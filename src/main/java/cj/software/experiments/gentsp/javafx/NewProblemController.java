@@ -27,12 +27,24 @@ public class NewProblemController implements Initializable {
     @FXML
     private TextField tfElitismCount;
 
+    @FXML
+    private TextField tfCrossoverRate;
+
+    @FXML
+    private TextField tfTournamentSize;
+
+    @FXML
+    private TextField tfMutationRate;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initInt(tfNumberCities, 100);
         initInt(tfPopulationSize, 100);
         initInt(tfNumCycles, 10000);
         initInt(tfElitismCount, 2);
+        initDouble(tfCrossoverRate, 0.9);
+        initInt(tfTournamentSize, 3);
+        initDouble(tfMutationRate, 0.009);
 
         Platform.runLater(new Runnable() {
             @Override
@@ -46,6 +58,13 @@ public class NewProblemController implements Initializable {
         PositiveIntegerStringConverter posConverter = new PositiveIntegerStringConverter();
         PositiveIntegerFilter posFilter = new PositiveIntegerFilter();
         TextFormatter<Integer> formatter = new TextFormatter<>(posConverter, value, posFilter);
+        textField.setTextFormatter(formatter);
+    }
+
+    private void initDouble(TextField textField, double value) {
+        PositiveDoubleStringConverter posConverter = new PositiveDoubleStringConverter();
+        PositiveDoubleFilter posFilter = new PositiveDoubleFilter();
+        TextFormatter<Double> formatter = new TextFormatter<>(posConverter, value, posFilter);
         textField.setTextFormatter(formatter);
     }
 
@@ -65,9 +84,26 @@ public class NewProblemController implements Initializable {
         return getInt(tfElitismCount);
     }
 
+    public double getCrossoverRate() {
+        return getDouble(tfCrossoverRate);
+    }
+
+    public int getTournamentSize() {
+        return getInt(tfTournamentSize);
+    }
+
+    public double getMutationRate() {
+        return getDouble(tfMutationRate);
+    }
     private int getInt(TextField source) {
         String content = source.getText();
         int result = Integer.parseInt(content);
+        return result;
+    }
+
+    private double getDouble(TextField source) {
+        String content = source.getText();
+        double result = Double.parseDouble(content);
         return result;
     }
 }
