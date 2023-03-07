@@ -36,11 +36,13 @@ public class FxmlNewProblemDialog extends Dialog<ProblemSetup> {
                     if (buttonData.equals(ButtonBar.ButtonData.OK_DONE)) {
                         int numCities = newProblemController.getNumberCities();
                         int populationSize = newProblemController.getPopulationSize();
+                        int numCycles = newProblemController.getNumCycles();
+                        int elitismCount = newProblemController.getElitismCount();
                         result = new ProblemSetup(
                                 numCities,
                                 populationSize,
-                                10000,
-                                2,
+                                numCycles,
+                                elitismCount,
                                 0.9,
                                 3,
                                 0.009);

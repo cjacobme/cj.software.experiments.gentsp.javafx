@@ -21,10 +21,18 @@ public class NewProblemController implements Initializable {
     @FXML
     private TextField tfPopulationSize;
 
+    @FXML
+    private TextField tfNumCycles;
+
+    @FXML
+    private TextField tfElitismCount;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initInt(tfNumberCities, 100);
         initInt(tfPopulationSize, 100);
+        initInt(tfNumCycles, 10000);
+        initInt(tfElitismCount, 2);
 
         Platform.runLater(new Runnable() {
             @Override
@@ -47,6 +55,14 @@ public class NewProblemController implements Initializable {
 
     public int getPopulationSize() {
         return getInt(tfPopulationSize);
+    }
+
+    public int getNumCycles() {
+        return getInt(tfNumCycles);
+    }
+
+    public int getElitismCount() {
+        return getInt(tfElitismCount);
     }
 
     private int getInt(TextField source) {

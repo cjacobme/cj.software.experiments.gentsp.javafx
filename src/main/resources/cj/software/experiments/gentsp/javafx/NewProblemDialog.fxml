@@ -3,26 +3,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<DialogPane prefWidth="500" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="cj.software.experiments.gentsp.javafx.NewProblemController">
+<DialogPane prefWidth="500" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cj.software.experiments.gentsp.javafx.NewProblemController">
     <content>
         <GridPane hgap="5" vgap="5">
-            <Label text="number of cities"/>
-            <TextField fx:id="tfNumberCities" GridPane.columnIndex="1"/>
-            <Label text="population size" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextField fx:id="tfPopulationSize" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="number of cities" />
+            <TextField fx:id="tfNumberCities" promptText="positive value" GridPane.columnIndex="1" />
+            <Label text="population size" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="tfPopulationSize" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <Label text="number of cycles" GridPane.rowIndex="2" />
+         <TextField fx:id="tfNumCycles" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <Label text="elitism count" GridPane.rowIndex="3" />
+         <TextField fx:id="tfElitismCount" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <columnConstraints>
-                <ColumnConstraints/>
-                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints />
+                <ColumnConstraints hgrow="ALWAYS" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints/>
+                <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
             </rowConstraints>
         </GridPane>
     </content>
 
     <buttonTypes>
-        <ButtonType buttonData="CANCEL_CLOSE" text="Cancel"/>
-        <ButtonType buttonData="OK_DONE" text="OK"/>
+        <ButtonType buttonData="CANCEL_CLOSE" text="Cancel" />
+        <ButtonType buttonData="OK_DONE" text="OK" />
     </buttonTypes>
 </DialogPane>

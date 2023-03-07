@@ -39,6 +39,8 @@ public class GenTspMainController {
             ProblemSetup problemSetup = optionalProblemSetup.get();
             logger.info(INT_FORMAT, "number of cities", problemSetup.getNumCities());
             logger.info(INT_FORMAT, "population size", problemSetup.getPopulationSize());
+            logger.info(INT_FORMAT, "number of cycles", problemSetup.getMaxGenerations());
+            logger.info(INT_FORMAT, "elitism count", problemSetup.getElitismCount());
         } else {
             logger.info("that was cancelled");
         }
