@@ -1,5 +1,6 @@
 package cj.software.experiments.gentsp.javafx;
 
+import cj.software.experiments.gentsp.GeneticTspSpringBootApplication;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;

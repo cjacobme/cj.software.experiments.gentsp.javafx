@@ -1,6 +1,8 @@
 package cj.software.experiments.gentsp.javafx;
 
+import cj.software.experiments.gentsp.entity.City;
 import cj.software.experiments.gentsp.entity.ProblemSetup;
+import cj.software.experiments.gentsp.util.CityFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -23,6 +26,10 @@ public class GenTspMainController {
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
+
+    @Autowired
+    private CityFactory cityFactory;
+
     private final Logger logger = LogManager.getFormatterLogger();
 
     @FXML
@@ -46,8 +53,15 @@ public class GenTspMainController {
             logger.info(DOUBLE_FORMAT, "crossover rate", problemSetup.getCrossoverRate());
             logger.info(INT_FORMAT, "tournament size", problemSetup.getTournamentSize());
             logger.info(DOUBLE_FORMAT, "mutation rate", problemSetup.getMutationRate());
+
+            createCities(problemSetup.getNumCities());
         } else {
             logger.info("that was cancelled");
         }
+    }
+
+    private void createCities (int numCities) {
+        List<City> cities = cityFactory.createCities(numCities);
+        logger.info("%d cities created", cities.size());
     }
 }
