@@ -1,14 +1,16 @@
 package cj.software.experiments.gentsp.util;
 
-import static org.assertj.core.api.Assertions.*;
-
 import cj.software.experiments.gentsp.entity.City;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.offset;
 
 @SpringJUnitConfig(classes = {GeometryUtil.class})
 public class GeometryUtilTest {
@@ -54,6 +56,13 @@ public class GeometryUtilTest {
                 City.builder().withX(6).withY(5).build()
         );
         calcMinDistance(toBeChecked, collection, 1.41421);
+    }
+
+    @Test
+    public void calcMinDistanceWithEmptyList() {
+        City toBeChecked = City.builder().withX(131).withY(242).build();
+        Collection<City> empty = new ArrayList<>();
+        calcMinDistance(toBeChecked, empty, Double.MAX_VALUE);
     }
 
     private void calcMinDistance(City toBeChecked, Collection<City> collection, double expected) {
