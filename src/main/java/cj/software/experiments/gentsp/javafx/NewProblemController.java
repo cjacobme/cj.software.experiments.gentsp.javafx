@@ -16,6 +16,12 @@ import java.util.ResourceBundle;
 public class NewProblemController implements Initializable {
 
     @FXML
+    private TextField tfWorldWidth;
+
+    @FXML
+    private TextField tfWorldHeight;
+
+    @FXML
     private TextField tfNumberCities;
 
     @FXML
@@ -38,6 +44,8 @@ public class NewProblemController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initInt(tfWorldWidth, 100);
+        initInt(tfWorldHeight, 100);
         initInt(tfNumberCities, 100);
         initInt(tfPopulationSize, 100);
         initInt(tfNumCycles, 10000);
@@ -49,7 +57,7 @@ public class NewProblemController implements Initializable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                tfNumberCities.requestFocus();
+                tfWorldWidth.requestFocus();
             }
         });
     }
@@ -66,6 +74,14 @@ public class NewProblemController implements Initializable {
         PositiveDoubleFilter posFilter = new PositiveDoubleFilter();
         TextFormatter<Double> formatter = new TextFormatter<>(posConverter, value, posFilter);
         textField.setTextFormatter(formatter);
+    }
+
+    public int getWorldWidth() {
+        return getInt(tfWorldWidth);
+    }
+
+    public int getWorldHeight() {
+        return getInt(tfWorldHeight);
     }
 
     public int getNumberCities() {

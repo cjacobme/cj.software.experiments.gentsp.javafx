@@ -6,20 +6,24 @@
 <DialogPane prefWidth="500" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cj.software.experiments.gentsp.javafx.NewProblemController">
     <content>
         <GridPane hgap="5" vgap="5">
-            <Label text="number of cities" />
-            <TextField fx:id="tfNumberCities" promptText="positive value" GridPane.columnIndex="1" />
-            <Label text="population size" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <TextField fx:id="tfPopulationSize" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="number of cycles" GridPane.rowIndex="2" />
-            <TextField fx:id="tfNumCycles" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="elitism count" GridPane.rowIndex="3" />
-            <TextField fx:id="tfElitismCount" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-         <Label text="cross-over rate" GridPane.rowIndex="4" />
-         <TextField fx:id="tfCrossoverRate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-         <Label text="tournament size" GridPane.rowIndex="5" />
-         <TextField fx:id="tfTournamentSize" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-         <Label text="mutation rate" GridPane.rowIndex="6" />
-         <TextField fx:id="tfMutationRate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label text="number of cities" GridPane.rowIndex="2" />
+            <TextField fx:id="tfNumberCities" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="population size" GridPane.rowIndex="3" />
+            <TextField fx:id="tfPopulationSize" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="number of cycles" GridPane.rowIndex="4" />
+            <TextField fx:id="tfNumCycles" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="elitism count" GridPane.rowIndex="5" />
+            <TextField fx:id="tfElitismCount" promptText="positive value" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+         <Label text="cross-over rate" GridPane.rowIndex="6" />
+         <TextField fx:id="tfCrossoverRate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+         <Label text="tournament size" GridPane.rowIndex="7" />
+         <TextField fx:id="tfTournamentSize" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+         <Label text="mutation rate" GridPane.rowIndex="8" />
+         <TextField fx:id="tfMutationRate" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+         <Label text="world width" />
+         <TextField fx:id="tfWorldWidth" GridPane.columnIndex="1" />
+         <Label text="world height" GridPane.rowIndex="1" />
+         <TextField fx:id="tfWorldHeight" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <columnConstraints>
                 <ColumnConstraints />
                 <ColumnConstraints hgrow="ALWAYS" />
@@ -29,6 +33,8 @@
                 <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />

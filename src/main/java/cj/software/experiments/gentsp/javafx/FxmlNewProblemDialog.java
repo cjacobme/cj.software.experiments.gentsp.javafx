@@ -34,6 +34,8 @@ public class FxmlNewProblemDialog extends Dialog<ProblemSetup> {
                     ProblemSetup result;
                     ButtonBar.ButtonData buttonData = buttonType.getButtonData();
                     if (buttonData.equals(ButtonBar.ButtonData.OK_DONE)) {
+                        int worldWidth = newProblemController.getWorldWidth();
+                        int worldHeight = newProblemController.getWorldHeight();
                         int numCities = newProblemController.getNumberCities();
                         int populationSize = newProblemController.getPopulationSize();
                         int numCycles = newProblemController.getNumCycles();
@@ -42,6 +44,8 @@ public class FxmlNewProblemDialog extends Dialog<ProblemSetup> {
                         int tournamentSize = newProblemController.getTournamentSize();
                         double mutationRate = newProblemController.getMutationRate();
                         result = new ProblemSetup(
+                                worldWidth,
+                                worldHeight,
                                 numCities,
                                 populationSize,
                                 numCycles,

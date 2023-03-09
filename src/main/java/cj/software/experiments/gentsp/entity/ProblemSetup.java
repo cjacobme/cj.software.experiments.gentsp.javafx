@@ -5,6 +5,10 @@ import java.io.Serializable;
 public class ProblemSetup implements Serializable {
     static final long serialVersionUID = 1L;
 
+    private final int width;
+
+    private final int height;
+
     private final int numCities;
 
     private final int populationSize;
@@ -20,6 +24,8 @@ public class ProblemSetup implements Serializable {
     private final double mutationRate;
 
     public ProblemSetup(
+            int width,
+            int height,
             int numCities,
             int populationSize,
             int maxGenerations,
@@ -27,6 +33,8 @@ public class ProblemSetup implements Serializable {
             double crossoverRate,
             int tournamentSize,
             double mutationRate) {
+        this.width = width;
+        this.height = height;
         this.numCities = numCities;
         this.populationSize = populationSize;
         this.maxGenerations = maxGenerations;
@@ -34,6 +42,14 @@ public class ProblemSetup implements Serializable {
         this.crossoverRate = crossoverRate;
         this.tournamentSize = tournamentSize;
         this.mutationRate = mutationRate;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public int getNumCities() {

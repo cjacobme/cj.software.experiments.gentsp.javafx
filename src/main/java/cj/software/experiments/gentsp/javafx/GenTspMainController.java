@@ -46,6 +46,8 @@ public class GenTspMainController {
         if (optionalProblemSetup.isPresent()) {
             logger.info("new problem setup was defined");
             ProblemSetup problemSetup = optionalProblemSetup.get();
+            logger.info(INT_FORMAT, "world width", problemSetup.getWidth());
+            logger.info(INT_FORMAT, "world height", problemSetup.getHeight());
             logger.info(INT_FORMAT, "number of cities", problemSetup.getNumCities());
             logger.info(INT_FORMAT, "population size", problemSetup.getPopulationSize());
             logger.info(INT_FORMAT, "number of cycles", problemSetup.getMaxGenerations());
