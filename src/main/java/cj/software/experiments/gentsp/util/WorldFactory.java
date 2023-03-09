@@ -1,0 +1,39 @@
+package cj.software.experiments.gentsp.util;
+
+import cj.software.experiments.gentsp.entity.City;
+import cj.software.experiments.gentsp.entity.World;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class WorldFactory {
+    @Autowired
+    private RandomUtil randomUtil;
+
+    @Autowired
+    private GeometryUtil geometryUtil;
+    public static final int DIAMETER = 6;
+
+    public World createWorld(int width, int height, int numCities) {
+        World result = World.builder().withWidth(width).withHeight(height).build();
+        List<City> allCities = new ArrayList<>();
+        for (int iCity = 0; iCity < numCities; iCity++) {
+            boolean tooClose = true;
+            while (tooClose) {
+                int x = randomUtil.nextRandomValue(width);
+                int y = randomUtil.nextRandomValue(height);
+                City city = City.builder().withX(x).withY(y).build();
+                double minDistance = geometryUtil.calcMinDistance(city, allCities);
+                if (minDistance > DIAMETER) {
+                    tooClose = false;
+                    allCities.add(city);
+                }
+            }
+        }
+        result.addAll(allCities);
+        return result;
+    }
+}
