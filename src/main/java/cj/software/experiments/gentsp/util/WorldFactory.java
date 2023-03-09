@@ -2,6 +2,8 @@ package cj.software.experiments.gentsp.util;
 
 import cj.software.experiments.gentsp.entity.City;
 import cj.software.experiments.gentsp.entity.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ public class WorldFactory {
     private GeometryUtil geometryUtil;
     public static final int DIAMETER = 6;
 
+    private final Logger logger = LogManager.getFormatterLogger();
+
     public World createWorld(int width, int height, int numCities) {
         World result = World.builder().withWidth(width).withHeight(height).build();
         List<City> allCities = new ArrayList<>();
@@ -30,6 +34,10 @@ public class WorldFactory {
                 if (minDistance > DIAMETER) {
                     tooClose = false;
                     allCities.add(city);
+                } else {
+                    logger.info("min distance %7.3f for city #%d is too close, try once more",
+                            minDistance,
+                            iCity);
                 }
             }
         }

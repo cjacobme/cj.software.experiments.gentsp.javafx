@@ -1,6 +1,7 @@
 package cj.software.experiments.gentsp.util;
 
 import cj.software.experiments.gentsp.entity.City;
+import javafx.geometry.Point2D;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -23,6 +24,15 @@ public class GeometryUtil {
             double distance = calcDistance(toBeChecked, city);
             result = Math.min(result, distance);
         }
+        return result;
+    }
+
+    public Point2D transformToPoint2D(City city, double widthRatio, double heightRatio) {
+        int cityX = city.getX();
+        int cityY = city.getY();
+        double x = cityX * widthRatio;
+        double y = cityY * heightRatio;
+        Point2D result = new Point2D(x, y);
         return result;
     }
 }
