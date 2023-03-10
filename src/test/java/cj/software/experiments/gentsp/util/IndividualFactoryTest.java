@@ -33,15 +33,20 @@ class IndividualFactoryTest {
 
     @Test
     void createWith3Chromosomes() {
-        createIndividual(3, new int[]{0, 1, 0, 2, 2, 0}, new int[]{1, 0, 2});
+        createIndividual(5, 1,3, new int[]{0, 1, 0, 2, 2, 0}, new int[]{1, 0, 2});
     }
 
     @Test
     void createWith5Chromosomes() {
-        createIndividual(5, new int[]{0, 3, 1, 0, 1, 1, 4, 1, 2, 3}, new int[]{1, 4, 0, 2, 3});
+        createIndividual(13, 2, 5, new int[]{0, 3, 1, 0, 1, 1, 4, 1, 2, 3}, new int[]{1, 4, 0, 2, 3});
     }
 
-    private void createIndividual(int chromosomeLength, int[] swapPositions, int[] expChromosomes) {
+    private void createIndividual(
+            int cycleCounter,
+            int populationCounter,
+            int chromosomeLength,
+            int[] swapPositions,
+            int[] expChromosomes) {
         // mock beans
         OngoingStubbing<Integer> stubbing = when(randomUtil.nextRandomValue(chromosomeLength)).thenReturn(swapPositions[0]);
         for (int i = 1; i < swapPositions.length; i++) {
@@ -49,11 +54,13 @@ class IndividualFactoryTest {
         }
 
         // invoke
-        Individual individual = factory.create(chromosomeLength);
+        Individual individual = factory.create(cycleCounter, populationCounter, chromosomeLength);
 
         // checks
         assertThat(individual).as("individual").isNotNull();
         SoftAssertions softy = new SoftAssertions();
+        softy.assertThat(individual.getCycleCounter()).as("cycle counter").isEqualTo(cycleCounter);
+        softy.assertThat(individual.getPopulationCounter()).as("population counter").isEqualTo(populationCounter);
         softy.assertThat(individual.getChromosome()).as("chromosomes").isEqualTo(expChromosomes);
         softy.assertThat(individual.getFitnessValue()).as("fitness values").isEqualTo(0.0);
         softy.assertThat(individual.getDistanceSum()).as("distance sum").isEqualTo(0.0);

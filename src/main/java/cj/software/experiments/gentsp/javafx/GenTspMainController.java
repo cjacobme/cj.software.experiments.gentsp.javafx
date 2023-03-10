@@ -77,7 +77,7 @@ public class GenTspMainController implements Initializable {
             logger.info("world created");
             worldPane.setWorld(world);
 
-            Population population = populationFactory.create(populationSize, numCities);
+            Population population = populationFactory.create(0, populationSize, numCities);
             logger.info("population created");
 
         } else {

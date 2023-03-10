@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 public class IndividualFactory {
     @Autowired
     private RandomUtil randomUtil;
-    public Individual create(int chromosomeLength) {
+    public Individual create(
+            int cycleCounter,
+            int populationCounter,
+            int chromosomeLength) {
         int[] chromosomes = createChromosomesArray(chromosomeLength);
         for (int i = 0; i < chromosomeLength; i++) {
             int pos1 = randomUtil.nextRandomValue(chromosomeLength);
@@ -18,6 +21,8 @@ public class IndividualFactory {
             chromosomes[pos2] = swap;
         }
         Individual result = Individual.builder()
+                .withCycleCounter(cycleCounter)
+                .withPopulationCounter(populationCounter)
                 .withChromosomes(chromosomes)
                 .build();
         return result;

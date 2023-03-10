@@ -10,10 +10,10 @@ public class PopulationFactory {
     @Autowired
     private IndividualFactory individualFactory;
 
-    public Population create(int numIndividuals, int chromosomeLength) {
+    public Population create(int cycleCounter, int numIndividuals, int chromosomeLength) {
         Individual[] individuals = new Individual[numIndividuals];
         for (int i = 0; i < numIndividuals; i++) {
-            individuals[i] = individualFactory.create(chromosomeLength);
+            individuals[i] = individualFactory.create(cycleCounter, i, chromosomeLength);
         }
         Population result = Population.builder()
                 .withIndividuals(individuals)

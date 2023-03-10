@@ -20,23 +20,25 @@ class PopulationFactoryTest {
     private IndividualFactory individualFactory;
     @Test
     void create5With2() {
-        create(5, 2);
+        create(223, 5, 2);
     }
 
     @Test
     void create6With10() {
-        create(6, 10);
+        create(157, 6, 10);
     }
 
-    private void create(int numIndividuals, int chromosomeLength) {
+    private void create(int cycleCounter, int numIndividuals, int chromosomeLength) {
         // mock beans
         Individual individual = mock(Individual.class);
 
         // configure mocks
-        when(individualFactory.create(chromosomeLength)).thenReturn(individual);
+        for (int i = 0; i < numIndividuals; i++) {
+            when(individualFactory.create(cycleCounter, i, chromosomeLength)).thenReturn(individual);
+        }
 
         // invoke
-        Population created = populationFactory.create(numIndividuals, chromosomeLength);
+        Population created = populationFactory.create(cycleCounter, numIndividuals, chromosomeLength);
 
         // checks
         assertThat(created).as("created population").isNotNull();
@@ -45,7 +47,9 @@ class PopulationFactoryTest {
         softy.assertThat(individuals).as("individuals").hasSize(numIndividuals);
         softy.assertThat(created.getPopulationFitness()).as("population fitness").isEqualTo(0.0);
         softy.assertAll();
-        verify(individualFactory, times(numIndividuals)).create(chromosomeLength);
+        for (int i = 0; i < numIndividuals; i++) {
+            verify(individualFactory).create(cycleCounter, i, chromosomeLength);
+        }
         softy = new SoftAssertions();
         for (int i = 0; i < numIndividuals; i++) {
             softy.assertThat(individuals[i]).as("individual [%d]", i).isNotNull();
