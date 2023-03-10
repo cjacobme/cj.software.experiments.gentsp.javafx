@@ -10,6 +10,8 @@ import java.io.Serializable;
 public class City implements Serializable {
     static final long serialVersionUID = 1L;
 
+    public static final int DIAMETER = 6;
+
     private int x;
 
     private int y;

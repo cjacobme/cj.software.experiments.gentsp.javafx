@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @SpringJUnitConfig(classes = WorldFactory.class)
-public class WorldFactoryTest {
+class WorldFactoryTest {
     @Autowired
     private WorldFactory factory;
 
@@ -26,7 +26,7 @@ public class WorldFactoryTest {
     private GeometryUtil geometryUtil;
 
     @Test
-    public void buildWith3Cities() {
+    void buildWith3Cities() {
         // setup data
         int width = 100;
         int height = 200;
@@ -41,9 +41,9 @@ public class WorldFactoryTest {
         // mock beans
         when(randomUtil.nextRandomValue(100)).thenReturn(3, 4, 5);
         when(randomUtil.nextRandomValue(200)).thenReturn(121, 131, 141);
-        when(geometryUtil.calcMinDistance(city1, Collections.emptyList())).thenReturn(WorldFactory.DIAMETER + 0.01);
-        when(geometryUtil.calcMinDistance(city2, list1)).thenReturn(WorldFactory.DIAMETER + 0.1);
-        when(geometryUtil.calcMinDistance(city3, list2)).thenReturn(WorldFactory.DIAMETER + 0.1);
+        when(geometryUtil.calcMinDistance(city1, Collections.emptyList())).thenReturn(City.DIAMETER + 0.01);
+        when(geometryUtil.calcMinDistance(city2, list1)).thenReturn(City.DIAMETER + 0.1);
+        when(geometryUtil.calcMinDistance(city3, list2)).thenReturn(City.DIAMETER + 0.1);
 
         // invoke
         World world = factory.createWorld(width, height, numCities);
@@ -60,7 +60,7 @@ public class WorldFactoryTest {
     }
     
     @Test
-    public void build4CitiesWithOneTooClose() {
+    void build4CitiesWithOneTooClose() {
         // setup data
         int width = 150;
         int height = 250;
@@ -81,7 +81,7 @@ public class WorldFactoryTest {
         when(geometryUtil.calcMinDistance(city1, Collections.emptyList())).thenReturn(3453.8);
         when(geometryUtil.calcMinDistance(city2, list1)).thenReturn(223344.55);
         when(geometryUtil.calcMinDistance(city3, list2)).thenReturn(334455.66);
-        when(geometryUtil.calcMinDistance(tooClose, list3)).thenReturn((double)WorldFactory.DIAMETER);
+        when(geometryUtil.calcMinDistance(tooClose, list3)).thenReturn((double)City.DIAMETER);
         when(geometryUtil.calcMinDistance(city4, list3)).thenReturn(334432.2);
 
         // invoke

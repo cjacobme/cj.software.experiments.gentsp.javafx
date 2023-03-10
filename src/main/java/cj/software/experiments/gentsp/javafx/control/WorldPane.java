@@ -3,7 +3,6 @@ package cj.software.experiments.gentsp.javafx.control;
 import cj.software.experiments.gentsp.entity.City;
 import cj.software.experiments.gentsp.entity.World;
 import cj.software.experiments.gentsp.util.GeometryUtil;
-import cj.software.experiments.gentsp.util.WorldFactory;
 import cj.software.experiments.gentsp.util.spring.SpringContext;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -71,8 +70,8 @@ public class WorldPane extends Region {
         GeometryUtil geometryUtil = SpringContext.getBean(GeometryUtil.class);
         List<City> cities = world.getCities();
         gc.setFill(Color.BLACK);
-        double lengthHalf = WorldFactory.DIAMETER / 2.0;
-        double length = WorldFactory.DIAMETER;
+        double lengthHalf = City.DIAMETER / 2.0;
+        double length = City.DIAMETER;
         for (City city : cities) {
             Point2D point2D = geometryUtil.transformToPoint2D(city, widthRatio, heightRatio);
             gc.fillRect(point2D.getX() - lengthHalf, point2D.getY() - lengthHalf, length, length);

@@ -17,7 +17,6 @@ public class WorldFactory {
 
     @Autowired
     private GeometryUtil geometryUtil;
-    public static final int DIAMETER = 6;
 
     private final Logger logger = LogManager.getFormatterLogger();
 
@@ -31,7 +30,7 @@ public class WorldFactory {
                 int y = randomUtil.nextRandomValue(height);
                 City city = City.builder().withX(x).withY(y).build();
                 double minDistance = geometryUtil.calcMinDistance(city, allCities);
-                if (minDistance > DIAMETER) {
+                if (minDistance > City.DIAMETER) {
                     tooClose = false;
                     allCities.add(city);
                 } else {
