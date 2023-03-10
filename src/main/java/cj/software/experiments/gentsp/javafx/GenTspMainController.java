@@ -1,10 +1,9 @@
 package cj.software.experiments.gentsp.javafx;
 
-import cj.software.experiments.gentsp.entity.Population;
-import cj.software.experiments.gentsp.entity.ProblemSetup;
-import cj.software.experiments.gentsp.entity.World;
+import cj.software.experiments.gentsp.entity.*;
 import cj.software.experiments.gentsp.javafx.control.WorldPane;
 import cj.software.experiments.gentsp.util.PopulationFactory;
+import cj.software.experiments.gentsp.util.Rating;
 import cj.software.experiments.gentsp.util.WorldFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -19,8 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Component
 @FxmlView("GenTspMain.fxml")
@@ -37,6 +35,9 @@ public class GenTspMainController implements Initializable {
 
     @Autowired
     private PopulationFactory populationFactory;
+
+    @Autowired
+    private Rating rating;
 
     @FXML
     private BorderPane mainBorder;
@@ -76,9 +77,13 @@ public class GenTspMainController implements Initializable {
             World world = worldFactory.createWorld(width, height, numCities);
             logger.info("world created");
             worldPane.setWorld(world);
+            List<City> cities = world.getCities();
 
             Population population = populationFactory.create(0, populationSize, numCities);
             logger.info("population created");
+            Map<CityPair, Double> existingDistances = new HashMap<>();
+            rating.calcPopulationFitness(population, cities, existingDistances);
+            logger.info("population fitness calculated to %8.4f", population.getPopulationFitness());
 
         } else {
             logger.info("that was cancelled");
