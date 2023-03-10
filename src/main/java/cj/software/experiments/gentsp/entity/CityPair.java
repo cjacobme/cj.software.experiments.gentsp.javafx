@@ -2,6 +2,8 @@ package cj.software.experiments.gentsp.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 
@@ -44,6 +46,15 @@ public class CityPair implements Serializable {
         } else {
             result = false;
         }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("city1", city1)
+                .append("city2", city2);
+        String result = builder.build();
         return result;
     }
 
