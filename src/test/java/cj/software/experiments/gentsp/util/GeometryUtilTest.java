@@ -2,6 +2,7 @@ package cj.software.experiments.gentsp.util;
 
 import cj.software.experiments.gentsp.entity.City;
 import cj.software.experiments.gentsp.entity.CityPair;
+import cj.software.experiments.gentsp.entity.Individual;
 import javafx.geometry.Point2D;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,5 +140,37 @@ class GeometryUtilTest {
         double returned = geometryUtil.calcDistance(cities, existingDistances, index1, index2);
 
         assertThat(returned).as("returned").isEqualTo(47.11);
+    }
+
+    @Test
+    void calcTotalDistance1() {
+        City city1 = City.builder().withX(1).withY(2).build();
+        City city2 = City.builder().withX(1).withY(3).build();
+        City city3 = City.builder().withX(3).withY(2).build();
+        List<City> cities = List.of(city1, city2, city3);
+        Map<CityPair, Double> existingDistances = new HashMap<>();
+        Individual individual = Individual.builder().withChromosomes(new int[]{0, 2, 1}).build();
+
+        double returned = geometryUtil.calcTotalDistance(individual, cities, existingDistances);
+
+        assertThat(returned).as("returned").isEqualTo(5.2361, offset(0.0001));
+    }
+
+    @Test
+    void calcTotalDistance2() {
+        City city1 = City.builder().withX(13).withY(24).build();
+        City city2 = City.builder().withX(23).withY(512).build();
+        City city3 = City.builder().withX(12).withY(2).build();
+        City city4 = City.builder().withX(25).withY(0).build();
+        List<City> cities = List.of(city1, city2, city3, city4);
+        Map<CityPair, Double> existingDistances = new HashMap<>();
+        Individual individual = Individual.builder().withChromosomes(new int[]{0, 1, 2, 3}).build();
+
+        double returned = geometryUtil.calcTotalDistance(individual, cities, existingDistances);
+
+        assertThat(returned).as("returned").isEqualTo(1038.207, offset(0.001));
+        assertThat(individual.getDistanceSum())
+                .as("distance sum in individual")
+                .isEqualTo(1038.207, offset(0.001));
     }
 }

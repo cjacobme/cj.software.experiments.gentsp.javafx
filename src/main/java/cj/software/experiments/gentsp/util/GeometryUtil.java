@@ -2,6 +2,7 @@ package cj.software.experiments.gentsp.util;
 
 import cj.software.experiments.gentsp.entity.City;
 import cj.software.experiments.gentsp.entity.CityPair;
+import cj.software.experiments.gentsp.entity.Individual;
 import javafx.geometry.Point2D;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,25 @@ public class GeometryUtil {
             result = calcDistance(city1, city2);
             existingDistances.put(cityPair, result);
         }
+        return result;
+    }
+
+    public double calcTotalDistance(Individual individual, List<City> cities, Map<CityPair, Double> existingDistances) {
+        double result = 0;
+        int numCities = cities.size();
+        int[] chromosome = individual.getChromosome();
+        for (int iCity = 0; iCity < numCities - 1; iCity++)
+        {
+            int index1 = chromosome[iCity];
+            int index2 = chromosome[iCity + 1];
+            double distance = calcDistance(cities, existingDistances, index1, index2);
+            result += distance;
+        }
+        int index1 = chromosome[numCities - 1];
+        int index2 = chromosome[0];
+        double distance = calcDistance(cities, existingDistances, index1, index2);
+        result += distance;
+        individual.setDistanceSum(result);
         return result;
     }
 }
