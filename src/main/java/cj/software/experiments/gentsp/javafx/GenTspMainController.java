@@ -1,10 +1,9 @@
 package cj.software.experiments.gentsp.javafx;
 
-import cj.software.experiments.gentsp.entity.Population;
-import cj.software.experiments.gentsp.entity.ProblemSetup;
-import cj.software.experiments.gentsp.entity.World;
+import cj.software.experiments.gentsp.entity.*;
 import cj.software.experiments.gentsp.javafx.control.WorldPane;
 import cj.software.experiments.gentsp.util.PopulationFactory;
+import cj.software.experiments.gentsp.util.RatingCalculator;
 import cj.software.experiments.gentsp.util.WorldFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -19,8 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Component
 @FxmlView("GenTspMain.fxml")
@@ -37,6 +35,9 @@ public class GenTspMainController implements Initializable {
 
     @Autowired
     private PopulationFactory populationFactory;
+
+    @Autowired
+    private RatingCalculator ratingCalculator;
 
     @FXML
     private BorderPane mainBorder;
@@ -76,9 +77,19 @@ public class GenTspMainController implements Initializable {
             World world = worldFactory.createWorld(width, height, numCities);
             logger.info("world created");
             worldPane.setWorld(world);
+            List<City> cities = world.getCities();
 
             Population population = populationFactory.create(0, populationSize, numCities);
             logger.info("population created");
+            Map<CityPair, Double> existingDistances = new HashMap<>();
+            ratingCalculator.calcPopulationFitness(population, cities, existingDistances);
+            List<Individual> individuals = ratingCalculator.sortFitness(population);
+            Individual best = individuals.get(0);
+            logger.info("best individual has dist sum  %8.2f and fitness %8.8f", best.getDistanceSum(), best.getFitnessValue());
+            Individual worst = individuals.get(individuals.size() - 1);
+            logger.info("worst individual has dist sum %8.2f and fitness %8.8f", worst.getDistanceSum(), worst.getFitnessValue());
+            logger.info("population has fitness sum                         %8.8f", population.getPopulationFitness());
+            //TODO visualize this List<Individual> in the UI
 
         } else {
             logger.info("that was cancelled");
