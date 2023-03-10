@@ -3,7 +3,7 @@ package cj.software.experiments.gentsp.javafx;
 import cj.software.experiments.gentsp.entity.*;
 import cj.software.experiments.gentsp.javafx.control.WorldPane;
 import cj.software.experiments.gentsp.util.PopulationFactory;
-import cj.software.experiments.gentsp.util.Rating;
+import cj.software.experiments.gentsp.util.RatingCalculator;
 import cj.software.experiments.gentsp.util.WorldFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -37,7 +37,7 @@ public class GenTspMainController implements Initializable {
     private PopulationFactory populationFactory;
 
     @Autowired
-    private Rating rating;
+    private RatingCalculator ratingCalculator;
 
     @FXML
     private BorderPane mainBorder;
@@ -82,8 +82,14 @@ public class GenTspMainController implements Initializable {
             Population population = populationFactory.create(0, populationSize, numCities);
             logger.info("population created");
             Map<CityPair, Double> existingDistances = new HashMap<>();
-            rating.calcPopulationFitness(population, cities, existingDistances);
-            logger.info("population fitness calculated to %8.4f", population.getPopulationFitness());
+            ratingCalculator.calcPopulationFitness(population, cities, existingDistances);
+            List<Individual> individuals = ratingCalculator.sortFitness(population);
+            Individual best = individuals.get(0);
+            logger.info("best individual has dist sum  %8.2f and fitness %8.8f", best.getDistanceSum(), best.getFitnessValue());
+            Individual worst = individuals.get(individuals.size() - 1);
+            logger.info("worst individual has dist sum %8.2f and fitness %8.8f", worst.getDistanceSum(), worst.getFitnessValue());
+            logger.info("population has fitness sum                         %8.8f", population.getPopulationFitness());
+            //TODO visualize this List<Individual> in the UI
 
         } else {
             logger.info("that was cancelled");

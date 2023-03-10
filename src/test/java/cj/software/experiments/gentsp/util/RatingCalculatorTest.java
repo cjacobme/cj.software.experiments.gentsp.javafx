@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringJUnitConfig(classes = Rating.class)
-class RatingTest {
+@SpringJUnitConfig(classes = RatingCalculator.class)
+class RatingCalculatorTest {
     @Autowired
-    private Rating rating;
+    private RatingCalculator ratingCalculator;
 
     @MockBean
     private GeometryUtil geometryUtil;
@@ -43,7 +43,7 @@ class RatingTest {
         when(geometryUtil.calcTotalDistance(individual, cities, existingDistances)).thenReturn(distanceSum);
 
         // invoke
-        double returned = rating.calcFitness(individual, cities, existingDistances);
+        double returned = ratingCalculator.calcFitness(individual, cities, existingDistances);
 
         // checks
         assertThat(returned).as("returned value").isEqualTo(expectedFitness);
@@ -94,12 +94,36 @@ class RatingTest {
                 .thenReturn(firstDistanceSum, furtherDistanceSums);
 
         // invoke
-        double totalFitness = rating.calcPopulationFitness(population, cities, existingDistances);
+        double totalFitness = ratingCalculator.calcPopulationFitness(population, cities, existingDistances);
         SoftAssertions softy = new SoftAssertions();
         softy.assertThat(totalFitness).as("total fitness").isEqualTo(expectedValue, offset(0.0001));
         softy.assertThat(population.getPopulationFitness()).as("in population").isEqualTo(expectedValue, offset(0.0001));
         softy.assertAll();
         verify(geometryUtil, times(population.getIndividuals().length)).calcTotalDistance(
                 any(Individual.class), eq(cities), eq(existingDistances));
+    }
+
+    @Test
+    void sort1() {
+        Individual ind1 = new IndividualBuilder().withFitnessValue(1.0).build();
+        Individual ind2 = new IndividualBuilder().withFitnessValue(2.0).build();
+        Individual ind3 = new IndividualBuilder().withFitnessValue(11.0).build();
+        Population population = new PopulationBuilder().withIndividuals(ind1, ind2, ind3).build();
+        List<Individual> expectedOrder = List.of(ind3, ind2, ind1);
+        sort(population, expectedOrder);
+    }
+
+    @Test
+    void sort2() {
+        Individual ind1 = new IndividualBuilder().withFitnessValue(15.0).build();
+        Individual ind2 = new IndividualBuilder().withFitnessValue(12.0).build();
+        Population population = new PopulationBuilder().withIndividuals(ind1, ind2).build();
+        List<Individual> expectedOrder = List.of(ind1, ind2);
+        sort(population, expectedOrder);
+    }
+
+    private void sort(Population population, List<Individual> expectedOrder) {
+        List<Individual> sorted = ratingCalculator.sortFitness(population);
+        assertThat(sorted).as("sorted").isEqualTo(expectedOrder);
     }
 }
