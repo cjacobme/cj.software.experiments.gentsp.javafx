@@ -1,8 +1,13 @@
 package cj.software.experiments.gentsp.javafx;
 
 import cj.software.experiments.gentsp.entity.ProblemSetup;
+import cj.software.experiments.gentsp.entity.World;
+import cj.software.experiments.gentsp.javafx.control.WorldPane;
+import cj.software.experiments.gentsp.util.WorldFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -12,17 +17,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Component
 @FxmlView("GenTspMain.fxml")
-public class GenTspMainController {
+public class GenTspMainController implements Initializable {
     private static final String INT_FORMAT = "%30s = %d";
 
     private static final String DOUBLE_FORMAT = "%30s = %10.4f";
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
+
+    @Autowired
+    private WorldFactory worldFactory;
+
+    @FXML
+    private BorderPane mainBorder;
+
+    private WorldPane worldPane;
+
     private final Logger logger = LogManager.getFormatterLogger();
 
     @FXML
@@ -39,15 +55,31 @@ public class GenTspMainController {
         if (optionalProblemSetup.isPresent()) {
             logger.info("new problem setup was defined");
             ProblemSetup problemSetup = optionalProblemSetup.get();
-            logger.info(INT_FORMAT, "number of cities", problemSetup.getNumCities());
+            int width = problemSetup.getWidth();
+            int height = problemSetup.getHeight();
+            int numCities = problemSetup.getNumCities();
+            logger.info(INT_FORMAT, "world width", width);
+            logger.info(INT_FORMAT, "world height", height);
+            logger.info(INT_FORMAT, "number of cities", numCities);
             logger.info(INT_FORMAT, "population size", problemSetup.getPopulationSize());
             logger.info(INT_FORMAT, "number of cycles", problemSetup.getMaxGenerations());
             logger.info(INT_FORMAT, "elitism count", problemSetup.getElitismCount());
             logger.info(DOUBLE_FORMAT, "crossover rate", problemSetup.getCrossoverRate());
             logger.info(INT_FORMAT, "tournament size", problemSetup.getTournamentSize());
             logger.info(DOUBLE_FORMAT, "mutation rate", problemSetup.getMutationRate());
+
+            World world = worldFactory.createWorld(width, height, numCities);
+            logger.info("world created");
+            worldPane.setWorld(world);
+
         } else {
             logger.info("that was cancelled");
         }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        worldPane = new WorldPane();
+        mainBorder.setCenter(worldPane);
     }
 }

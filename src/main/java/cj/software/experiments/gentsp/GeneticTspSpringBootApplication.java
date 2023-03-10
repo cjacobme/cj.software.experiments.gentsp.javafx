@@ -1,5 +1,6 @@
-package cj.software.experiments.gentsp.javafx;
+package cj.software.experiments.gentsp;
 
+import cj.software.experiments.gentsp.javafx.GenTspApplication;
 import javafx.application.Application;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
