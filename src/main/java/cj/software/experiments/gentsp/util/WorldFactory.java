@@ -34,7 +34,7 @@ public class WorldFactory {
                     tooClose = false;
                     allCities.add(city);
                 } else {
-                    logger.info("min distance %7.3f for city #%d is too close, try once more",
+                    logger.warn("min distance %7.3f for city #%d is too close, try once more",
                             minDistance,
                             iCity);
                 }
