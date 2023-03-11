@@ -6,6 +6,7 @@ import cj.software.experiments.gentsp.util.PopulationFactory;
 import cj.software.experiments.gentsp.util.RatingCalculator;
 import cj.software.experiments.gentsp.util.WorldFactory;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -56,7 +57,7 @@ public class GenTspMainController implements Initializable {
     private TableColumn<Individual, Integer> tcolCycle;
 
     @FXML
-    private TableColumn<Individual, Double> tcolDistanceSum;
+    private TableColumn<Individual, String> tcolDistanceSum;
 
     private WorldPane worldPane;
 
@@ -121,7 +122,11 @@ public class GenTspMainController implements Initializable {
         mainBorder.setCenter(worldPane);
 
         tcolCycle.setCellValueFactory(new PropertyValueFactory<>("cycleCounter"));
-        tcolDistanceSum.setCellValueFactory(new PropertyValueFactory<>("distanceSum"));
+        tcolDistanceSum.setCellValueFactory(cellData -> {
+            double distanceSum = cellData.getValue().getDistanceSum();
+            String formatted = String.format("%7.2f", distanceSum);
+            return new SimpleStringProperty(formatted);
+        });
         tblIndividuals.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<>() {
             @Override
             public void changed(
