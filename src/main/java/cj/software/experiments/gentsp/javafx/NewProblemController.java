@@ -28,9 +28,6 @@ public class NewProblemController implements Initializable {
     private TextField tfPopulationSize;
 
     @FXML
-    private TextField tfNumCycles;
-
-    @FXML
     private TextField tfElitismCount;
 
     @FXML
@@ -48,7 +45,6 @@ public class NewProblemController implements Initializable {
         initInt(tfWorldHeight, 100);
         initInt(tfNumberCities, 100);
         initInt(tfPopulationSize, 100);
-        initInt(tfNumCycles, 10000);
         initInt(tfElitismCount, 2);
         initDouble(tfCrossoverRate, 0.9);
         initInt(tfTournamentSize, 3);
@@ -90,10 +86,6 @@ public class NewProblemController implements Initializable {
 
     public int getPopulationSize() {
         return getInt(tfPopulationSize);
-    }
-
-    public int getNumCycles() {
-        return getInt(tfNumCycles);
     }
 
     public int getElitismCount() {

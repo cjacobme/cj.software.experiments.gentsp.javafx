@@ -85,7 +85,6 @@ public class GenTspMainController implements Initializable {
             logger.info(INT_FORMAT, "world height", height);
             logger.info(INT_FORMAT, "number of cities", numCities);
             logger.info(INT_FORMAT, "population size", populationSize);
-            logger.info(INT_FORMAT, "number of cycles", problemSetup.getMaxGenerations());
             logger.info(INT_FORMAT, "elitism count", problemSetup.getElitismCount());
             logger.info(DOUBLE_FORMAT, "crossover rate", problemSetup.getCrossoverRate());
             logger.info(INT_FORMAT, "tournament size", problemSetup.getTournamentSize());

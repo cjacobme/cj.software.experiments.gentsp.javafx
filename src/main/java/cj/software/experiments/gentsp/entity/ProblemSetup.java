@@ -13,8 +13,6 @@ public class ProblemSetup implements Serializable {
 
     private final int populationSize;
 
-    private final int maxGenerations;
-
     private final int elitismCount;
 
     private final double crossoverRate;
@@ -23,12 +21,12 @@ public class ProblemSetup implements Serializable {
 
     private final double mutationRate;
 
+    @SuppressWarnings("squid:S107")
     public ProblemSetup(
             int width,
             int height,
             int numCities,
             int populationSize,
-            int maxGenerations,
             int elitismCount,
             double crossoverRate,
             int tournamentSize,
@@ -37,7 +35,6 @@ public class ProblemSetup implements Serializable {
         this.height = height;
         this.numCities = numCities;
         this.populationSize = populationSize;
-        this.maxGenerations = maxGenerations;
         this.elitismCount = elitismCount;
         this.crossoverRate = crossoverRate;
         this.tournamentSize = tournamentSize;
@@ -58,10 +55,6 @@ public class ProblemSetup implements Serializable {
 
     public int getPopulationSize() {
         return populationSize;
-    }
-
-    public int getMaxGenerations() {
-        return maxGenerations;
     }
 
     public int getElitismCount() {

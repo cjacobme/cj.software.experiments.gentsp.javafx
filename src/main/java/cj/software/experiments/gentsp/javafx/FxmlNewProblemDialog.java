@@ -38,7 +38,6 @@ public class FxmlNewProblemDialog extends Dialog<ProblemSetup> {
                         int worldHeight = newProblemController.getWorldHeight();
                         int numCities = newProblemController.getNumberCities();
                         int populationSize = newProblemController.getPopulationSize();
-                        int numCycles = newProblemController.getNumCycles();
                         int elitismCount = newProblemController.getElitismCount();
                         double crossoverRate = newProblemController.getCrossoverRate();
                         int tournamentSize = newProblemController.getTournamentSize();
@@ -48,7 +47,6 @@ public class FxmlNewProblemDialog extends Dialog<ProblemSetup> {
                                 worldHeight,
                                 numCities,
                                 populationSize,
-                                numCycles,
                                 elitismCount,
                                 crossoverRate,
                                 tournamentSize,
