@@ -30,6 +30,7 @@ public class WorldPane extends Region {
 
     public void setWorld(World world) {
         this.world = world;
+        this.currentIndividual = null;
         draw();
     }
 
