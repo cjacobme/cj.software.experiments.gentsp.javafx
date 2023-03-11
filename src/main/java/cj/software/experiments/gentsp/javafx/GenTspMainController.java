@@ -6,8 +6,16 @@ import cj.software.experiments.gentsp.util.PopulationFactory;
 import cj.software.experiments.gentsp.util.RatingCalculator;
 import cj.software.experiments.gentsp.util.WorldFactory;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Window;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -41,6 +49,15 @@ public class GenTspMainController implements Initializable {
 
     @FXML
     private BorderPane mainBorder;
+
+    @FXML
+    private TableView<Individual> tblIndividuals;
+
+    @FXML
+    private TableColumn<Individual, Integer> tcolCycle;
+
+    @FXML
+    private TableColumn<Individual, String> tcolDistanceSum;
 
     private WorldPane worldPane;
 
@@ -89,8 +106,11 @@ public class GenTspMainController implements Initializable {
             Individual worst = individuals.get(individuals.size() - 1);
             logger.info("worst individual has dist sum %8.2f and fitness %8.8f", worst.getDistanceSum(), worst.getFitnessValue());
             logger.info("population has fitness sum                         %8.8f", population.getPopulationFitness());
-            //TODO visualize this List<Individual> in the UI
-
+            ObservableList<Individual> tableData = FXCollections.observableList(individuals);
+            tblIndividuals.setItems(tableData);
+            if (!individuals.isEmpty()) {
+                tblIndividuals.getSelectionModel().select(0);
+            }
         } else {
             logger.info("that was cancelled");
         }
@@ -100,5 +120,21 @@ public class GenTspMainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         worldPane = new WorldPane();
         mainBorder.setCenter(worldPane);
+
+        tcolCycle.setCellValueFactory(new PropertyValueFactory<>("cycleCounter"));
+        tcolDistanceSum.setCellValueFactory(cellData -> {
+            double distanceSum = cellData.getValue().getDistanceSum();
+            String formatted = String.format("%7.2f", distanceSum);
+            return new SimpleStringProperty(formatted);
+        });
+        tblIndividuals.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends Individual> observableValue,
+                    Individual oldValue,
+                    Individual newValue) {
+                worldPane.setCurrentIndividual(newValue);
+            }
+        });
     }
 }

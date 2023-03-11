@@ -1,6 +1,7 @@
 package cj.software.experiments.gentsp.javafx.control;
 
 import cj.software.experiments.gentsp.entity.City;
+import cj.software.experiments.gentsp.entity.Individual;
 import cj.software.experiments.gentsp.entity.World;
 import cj.software.experiments.gentsp.util.GeometryUtil;
 import cj.software.experiments.gentsp.util.spring.SpringContext;
@@ -19,20 +20,25 @@ public class WorldPane extends Region {
 
     private World world;
 
+    private Individual currentIndividual;
+
     public WorldPane() {
         getChildren().add(canvas);
         canvas.widthProperty().addListener(observable -> draw());
         canvas.heightProperty().addListener(observable -> draw());
     }
 
-    public World getWorld() {
-        return world;
-    }
-
     public void setWorld(World world) {
         this.world = world;
+        this.currentIndividual = null;
         draw();
     }
+
+    public void setCurrentIndividual(Individual currentIndividual) {
+        this.currentIndividual = currentIndividual;
+        draw();
+    }
+
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
@@ -47,6 +53,7 @@ public class WorldPane extends Region {
         canvas.setWidth(contentWith);
         canvas.setHeight(contentHeight);
     }
+
     private void draw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         double paneWidth = canvas.getWidth();
@@ -76,5 +83,52 @@ public class WorldPane extends Region {
             Point2D point2D = geometryUtil.transformToPoint2D(city, widthRatio, heightRatio);
             gc.fillRect(point2D.getX() - lengthHalf, point2D.getY() - lengthHalf, length, length);
         }
+        if (currentIndividual != null) {
+            drawCurrentIndividual(gc, widthRatio, heightRatio, geometryUtil, cities);
+        }
+    }
+
+    private void drawCurrentIndividual(
+            GraphicsContext gc,
+            double widthRatio,
+            double heightRatio,
+            GeometryUtil geometryUtil,
+            List<City> cities) {
+        Paint currentStroke = gc.getStroke();
+        gc.setStroke(Color.YELLOW);
+        try {
+            gc.beginPath();
+            try {
+                int[] chromosome = currentIndividual.getChromosome();
+                int index = chromosome[0];
+                City city = cities.get(index);
+                Point2D transformed = geometryUtil.transformToPoint2D(city, widthRatio, heightRatio);
+                gc.moveTo(transformed.getX(), transformed.getY());
+                int numCities = cities.size();
+                for (int iCity = 1; iCity < numCities; iCity++) {
+                    lineToCity(gc, widthRatio, heightRatio, geometryUtil, cities, chromosome, iCity);
+                }
+                lineToCity(gc, widthRatio, heightRatio, geometryUtil, cities, chromosome, 0);
+            } finally {
+                gc.closePath();
+            }
+        } finally {
+            gc.setStroke(currentStroke);
+        }
+    }
+
+    private void lineToCity(
+            GraphicsContext gc,
+            double withRatio,
+            double heightRatio,
+            GeometryUtil geometryUtil,
+            List<City> cities,
+            int[] chromosome,
+            int index) {
+        int iCity = chromosome[index];
+        City city = cities.get(iCity);
+        Point2D transformed = geometryUtil.transformToPoint2D(city, withRatio, heightRatio);
+        gc.lineTo(transformed.getX(), transformed.getY());
+        gc.stroke();
     }
 }
