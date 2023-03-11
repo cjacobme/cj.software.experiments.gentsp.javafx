@@ -6,6 +6,8 @@ import cj.software.experiments.gentsp.util.PopulationFactory;
 import cj.software.experiments.gentsp.util.RatingCalculator;
 import cj.software.experiments.gentsp.util.WorldFactory;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -105,6 +107,9 @@ public class GenTspMainController implements Initializable {
             logger.info("population has fitness sum                         %8.8f", population.getPopulationFitness());
             ObservableList<Individual> tableData = FXCollections.observableList(individuals);
             tblIndividuals.setItems(tableData);
+            if (!individuals.isEmpty()) {
+                tblIndividuals.getSelectionModel().select(0);
+            }
         } else {
             logger.info("that was cancelled");
         }
@@ -117,5 +122,14 @@ public class GenTspMainController implements Initializable {
 
         tcolCycle.setCellValueFactory(new PropertyValueFactory<>("cycleCounter"));
         tcolDistanceSum.setCellValueFactory(new PropertyValueFactory<>("distanceSum"));
+        tblIndividuals.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends Individual> observableValue,
+                    Individual oldValue,
+                    Individual newValue) {
+                worldPane.setCurrentIndividual(newValue);
+            }
+        });
     }
 }
