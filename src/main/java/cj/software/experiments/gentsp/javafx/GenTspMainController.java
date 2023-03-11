@@ -1,10 +1,12 @@
 package cj.software.experiments.gentsp.javafx;
 
 import cj.software.experiments.gentsp.entity.*;
+import cj.software.experiments.gentsp.javafx.control.TextFieldFormatter;
 import cj.software.experiments.gentsp.javafx.control.WorldPane;
 import cj.software.experiments.gentsp.util.PopulationFactory;
 import cj.software.experiments.gentsp.util.RatingCalculator;
 import cj.software.experiments.gentsp.util.WorldFactory;
+import cj.software.experiments.gentsp.util.spring.SpringContext;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,8 +15,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Window;
@@ -58,6 +62,15 @@ public class GenTspMainController implements Initializable {
 
     @FXML
     private TableColumn<Individual, String> tcolDistanceSum;
+
+    @FXML
+    private TextField tfNumberCycles;
+
+    @FXML
+    private Button btnRun;
+
+    @FXML
+    private Button btnStep;
 
     private WorldPane worldPane;
 
@@ -135,5 +148,15 @@ public class GenTspMainController implements Initializable {
                 worldPane.setCurrentIndividual(newValue);
             }
         });
+        TextFieldFormatter textFieldFormatter = SpringContext.getBean(TextFieldFormatter.class);
+        textFieldFormatter.initInt(tfNumberCycles, 10000);
+        tfNumberCycles.editableProperty().bind(worldPane.worldProperty().isNotNull());
+        btnRun.disableProperty().bind(worldPane.worldProperty().isNull());
+        btnStep.disableProperty().bind(worldPane.worldProperty().isNull());
+    }
+
+    @FXML
+    public void step() {
+        logger.info("perform 1 step...");
     }
 }

@@ -1,10 +1,11 @@
 package cj.software.experiments.gentsp.javafx;
 
+import cj.software.experiments.gentsp.javafx.control.TextFieldFormatter;
+import cj.software.experiments.gentsp.util.spring.SpringContext;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
 
@@ -41,14 +42,15 @@ public class NewProblemController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initInt(tfWorldWidth, 100);
-        initInt(tfWorldHeight, 100);
-        initInt(tfNumberCities, 100);
-        initInt(tfPopulationSize, 100);
-        initInt(tfElitismCount, 2);
-        initDouble(tfCrossoverRate, 0.9);
-        initInt(tfTournamentSize, 3);
-        initDouble(tfMutationRate, 0.009);
+        TextFieldFormatter textFieldFormatter = SpringContext.getBean(TextFieldFormatter.class);
+        textFieldFormatter.initInt(tfWorldWidth, 100);
+        textFieldFormatter.initInt(tfWorldHeight, 100);
+        textFieldFormatter.initInt(tfNumberCities, 100);
+        textFieldFormatter.initInt(tfPopulationSize, 100);
+        textFieldFormatter.initInt(tfElitismCount, 2);
+        textFieldFormatter.initDouble(tfCrossoverRate, 0.9);
+        textFieldFormatter.initInt(tfTournamentSize, 3);
+        textFieldFormatter.initDouble(tfMutationRate, 0.009);
 
         Platform.runLater(new Runnable() {
             @Override
@@ -56,20 +58,6 @@ public class NewProblemController implements Initializable {
                 tfWorldWidth.requestFocus();
             }
         });
-    }
-
-    private void initInt(TextField textField, int value) {
-        PositiveIntegerStringConverter posConverter = new PositiveIntegerStringConverter();
-        PositiveIntegerFilter posFilter = new PositiveIntegerFilter();
-        TextFormatter<Integer> formatter = new TextFormatter<>(posConverter, value, posFilter);
-        textField.setTextFormatter(formatter);
-    }
-
-    private void initDouble(TextField textField, double value) {
-        PositiveDoubleStringConverter posConverter = new PositiveDoubleStringConverter();
-        PositiveDoubleFilter posFilter = new PositiveDoubleFilter();
-        TextFormatter<Double> formatter = new TextFormatter<>(posConverter, value, posFilter);
-        textField.setTextFormatter(formatter);
     }
 
     public int getWorldWidth() {
