@@ -1,5 +1,8 @@
 package cj.software.experiments.gentsp.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 
 public class Population implements Serializable {
@@ -22,6 +25,27 @@ public class Population implements Serializable {
 
     public void setPopulationFitness(double populationFitness) {
         this.populationFitness = populationFitness;
+    }
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder builder = new HashCodeBuilder().append(individuals);
+        int result = builder.build();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result;
+        if (obj instanceof Population) {
+            Population other = (Population) obj;
+            EqualsBuilder builder = new EqualsBuilder()
+                    .append(this.individuals, other.individuals);
+            result = builder.build();
+        } else {
+            result = false;
+        }
+        return result;
     }
 
     public static Builder builder() {
