@@ -67,12 +67,13 @@ public class Individual implements Serializable {
     {
         String id = String.format("(%d,%d)", cycleCounter, populationCounter);
         StringBuilder sb = new StringBuilder();
-        int chromosomeLength = this.chromosome.length;
-        for (int chromo = 0; chromo < chromosomeLength - 1; chromo++)
-        {
-            sb.append(this.chromosome[chromo]).append(",");
+        if (this.chromosome != null) {
+            int chromosomeLength = this.chromosome.length;
+            for (int chromo = 0; chromo < chromosomeLength - 1; chromo++) {
+                sb.append(this.chromosome[chromo]).append(",");
+            }
+            sb.append(this.chromosome[chromosomeLength - 1]);
         }
-        sb.append(this.chromosome[chromosomeLength - 1]);
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("id", id)
                 .append("order", sb);
