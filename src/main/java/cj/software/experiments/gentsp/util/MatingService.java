@@ -41,7 +41,7 @@ public class MatingService {
         return result;
     }
 
-    public Individual mate(int cycleCounter, int populationCounter, Individual parent1, Individual parent2) {
+    Individual mate(int cycleCounter, int populationCounter, Individual parent1, Individual parent2) {
         int[] parent1Chromosomes = parent1.getChromosome();
         int[] parent2Chromosomes = parent2.getChromosome();
         int chromosomeLength = parent2Chromosomes.length;
@@ -83,5 +83,50 @@ public class MatingService {
                 .withChromosomes(offspringChromosome)
                 .build();
         return result;
+    }
+
+    public Population crossOver (
+            Population source,
+            double crossOverRate,
+            int elitismCount,
+            int tournamentSize,
+            int cycleCounter,
+            double mutationRate) {
+        List<Individual> sourceIndividuals = this.ratingCalculator.sortFitness(source);
+        int individualsCount = sourceIndividuals.size();
+        Individual[] newIndividuals = new Individual[individualsCount];
+        for (int iIndividual = 0; iIndividual < individualsCount; iIndividual++) {
+            Individual parent1 = sourceIndividuals.get(iIndividual);
+            double randomValue = randomUtil.nextRandomValue();
+            if (randomValue < crossOverRate && iIndividual >= elitismCount) {
+                Individual parent2 = selectParent(source, tournamentSize);
+                Individual offspring = mate(cycleCounter, iIndividual, parent1, parent2);
+                newIndividuals[iIndividual] = offspring;
+            } else {
+                newIndividuals[iIndividual] = parent1;
+            }
+        }
+
+        for (Individual individual : newIndividuals) {
+            mutate(individual, elitismCount, mutationRate);
+        }
+
+        Population result = Population.builder()
+                .withIndividuals(newIndividuals)
+                .build();
+        return result;
+    }
+
+    public void mutate (Individual individual, int elitismCount, double mutationRate) {
+        int chromosomeLength = individual.getChromosomeLength();
+        for (int i = elitismCount; i <  chromosomeLength; i++) {
+            if (randomUtil.nextRandomValue() < mutationRate) {
+                int otherIndex = randomUtil.nextRandomValue(chromosomeLength);
+                int otherValue = individual.getChromosome(otherIndex);
+                int indexedValue = individual.getChromosome(i);
+                individual.setChromosome(otherIndex, indexedValue);
+                individual.setChromosome(i, otherValue);
+            }
+        }
     }
 }

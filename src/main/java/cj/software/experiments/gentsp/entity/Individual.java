@@ -50,16 +50,21 @@ public class Individual implements Serializable {
     public void setFitnessValue(double fitnessValue) {
         this.fitnessValue = fitnessValue;
     }
-    public static Builder builder() {
-        return new Builder();
-    }
 
-    public void setGene(int index, int value) {
+    public void setChromosome(int index, int value) {
         chromosome[index] = value;
     }
 
-    public int getGene(int index) {
+    public int getChromosome(int index) {
         return chromosome[index];
+    }
+
+    public int getChromosomeLength() {
+        return chromosome.length;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Override

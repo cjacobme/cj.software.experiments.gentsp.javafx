@@ -21,6 +21,8 @@ public class ProblemSetup implements Serializable {
 
     private final double mutationRate;
 
+    private int cycleCounter;
+
     @SuppressWarnings("squid:S107")
     public ProblemSetup(
             int width,
@@ -71,5 +73,14 @@ public class ProblemSetup implements Serializable {
 
     public double getMutationRate() {
         return mutationRate;
+    }
+
+    public int incCycleCounter() {
+        int result = ++cycleCounter;
+        return result;
+    }
+
+    public int getCycleCounter() {
+        return cycleCounter;
     }
 }
