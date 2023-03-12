@@ -146,4 +146,35 @@ class MatingServiceTest {
     }
 
     //TODO: implement crossOver
+
+    @Test
+    void mate1() {
+        Individual parent1 = createIndividual(10.0, 15.0, 0, 0, 0, 1, 2, 3, 4, 5);
+        Individual parent2 = createIndividual(11.0, 12.0, 0, 1, 1, 0, 4, 3, 5, 2);
+        int cycleCounter = 1;
+        int populationCounter = 0;
+        Individual expected = createIndividual(0.0, 0.0, cycleCounter, populationCounter, 5, 1, 2, 3, 0, 4);
+
+        when(randomUtil.nextRandomValue(6)).thenReturn(4).thenReturn(2);
+
+        Individual offspring = matingService.mate(cycleCounter, populationCounter, parent1, parent2);
+
+        assertThat(offspring).as("offspring").usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void mate2() {
+        Individual parent1 = createIndividual(10.0, 15.0, 1, 1,  0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        Individual parent2 = createIndividual(11.0, 12.0, 2, 13, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+        int cycleCounter = 3;
+        int populationCounter = 25;
+        Individual expected = createIndividual(0.0, 0.0, cycleCounter, populationCounter,
+                1, 0, 9, 8, 4, 5, 6, 7, 3, 2);
+
+        when(randomUtil.nextRandomValue(10)).thenReturn(4).thenReturn(8);
+
+        Individual offspring = matingService.mate(cycleCounter, populationCounter, parent1, parent2);
+
+        assertThat(offspring).as("offspring").usingRecursiveComparison().isEqualTo(expected);
+    }
 }
