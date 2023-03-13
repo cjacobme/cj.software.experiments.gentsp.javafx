@@ -1,12 +1,11 @@
 package cj.software.experiments.gentsp.javafx;
 
 import cj.software.experiments.gentsp.entity.*;
+import cj.software.experiments.gentsp.event.MultipleCyclesEvent;
+import cj.software.experiments.gentsp.event.MultipleCyclesListener;
 import cj.software.experiments.gentsp.javafx.control.TextFieldFormatter;
 import cj.software.experiments.gentsp.javafx.control.WorldPane;
-import cj.software.experiments.gentsp.util.MatingService;
-import cj.software.experiments.gentsp.util.PopulationFactory;
-import cj.software.experiments.gentsp.util.RatingCalculator;
-import cj.software.experiments.gentsp.util.WorldFactory;
+import cj.software.experiments.gentsp.util.*;
 import cj.software.experiments.gentsp.util.spring.SpringContext;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,10 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Window;
@@ -130,6 +126,15 @@ public class GenTspMainController implements Initializable {
     }
 
     private void setPopulation(Population population) {
+        if (this.population != null) {
+            List<Individual> currentRated = ratingCalculator.sortFitness(this.population);
+            double currentDistSum = currentRated.get(0).getDistanceSum();
+            List<Individual> newRated = ratingCalculator.sortFitness(population);
+            double newDistSum = newRated.get(0).getDistanceSum();
+            if (newDistSum > currentDistSum) {
+                logger.error("Oops");
+            }
+        }
         List<City> cities = worldPane.getWorld().getCities();
         this.population = population;
         Map<CityPair, Double> existingDistances = new HashMap<>();
@@ -195,5 +200,61 @@ public class GenTspMainController implements Initializable {
                 cycleCounter,
                 mutationRate);
         this.setPopulation(newPopulation);
+    }
+
+    @FXML
+    public void runCycles() {
+        MyMultipleCyclesListener listener = new MyMultipleCyclesListener();
+        int numCycles = Integer.parseInt(tfNumberCycles.getText());
+        List<City> cities = worldPane.getWorld().getCities();
+        MultipleCyclesRunner runner = new MultipleCyclesRunner(
+                matingService,
+                ratingCalculator,
+                problemSetup,
+                population,
+                cities,
+                numCycles);
+        runner.addMultipleCyclesListener(listener);
+        Thread thread = new Thread(runner, "breed");
+        thread.start();
+    }
+
+    private class MyMultipleCyclesListener implements MultipleCyclesListener {
+
+        @Override
+        public void nextCycleFinished(final MultipleCyclesEvent event) {
+            GenTspMainController.this.population = event.getPopulation();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    List<Individual> individuals = event.getIndividualsSorted();
+                    ObservableList<Individual> tableData = FXCollections.observableList(individuals);
+                    tblIndividuals.setItems(tableData);
+                    if (!individuals.isEmpty()) {
+                        tblIndividuals.getSelectionModel().select(0);
+                    }
+                    String formatted = String.format("%7.6f", event.getPopulationFitness());
+                    tfPopulationFitness.setText(formatted);
+                    formatted = String.format("%d", event.getCycleCounter());
+                    tfCycleCounter.setText(formatted);
+                }
+            });
+        }
+
+        @Override
+        public void allCyclesFinished() {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION, "All cycles calculated");
+                            alert.show();
+                        }
+                    });
+                }
+            });
+        }
     }
 }
