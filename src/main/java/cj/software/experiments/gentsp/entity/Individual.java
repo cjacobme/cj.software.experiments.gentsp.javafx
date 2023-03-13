@@ -50,16 +50,21 @@ public class Individual implements Serializable {
     public void setFitnessValue(double fitnessValue) {
         this.fitnessValue = fitnessValue;
     }
-    public static Builder builder() {
-        return new Builder();
-    }
 
-    public void setGene(int index, int value) {
+    public void setChromosome(int index, int value) {
         chromosome[index] = value;
     }
 
-    public int getGene(int index) {
+    public int getChromosome(int index) {
         return chromosome[index];
+    }
+
+    public int getChromosomeLength() {
+        return chromosome.length;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -67,12 +72,13 @@ public class Individual implements Serializable {
     {
         String id = String.format("(%d,%d)", cycleCounter, populationCounter);
         StringBuilder sb = new StringBuilder();
-        int chromosomeLength = this.chromosome.length;
-        for (int chromo = 0; chromo < chromosomeLength - 1; chromo++)
-        {
-            sb.append(this.chromosome[chromo]).append(",");
+        if (this.chromosome != null) {
+            int chromosomeLength = this.chromosome.length;
+            for (int chromo = 0; chromo < chromosomeLength - 1; chromo++) {
+                sb.append(this.chromosome[chromo]).append(",");
+            }
+            sb.append(this.chromosome[chromosomeLength - 1]);
         }
-        sb.append(this.chromosome[chromosomeLength - 1]);
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("id", id)
                 .append("order", sb);

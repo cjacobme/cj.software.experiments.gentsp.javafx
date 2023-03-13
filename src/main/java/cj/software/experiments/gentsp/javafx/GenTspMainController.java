@@ -1,10 +1,13 @@
 package cj.software.experiments.gentsp.javafx;
 
 import cj.software.experiments.gentsp.entity.*;
+import cj.software.experiments.gentsp.javafx.control.TextFieldFormatter;
 import cj.software.experiments.gentsp.javafx.control.WorldPane;
+import cj.software.experiments.gentsp.util.MatingService;
 import cj.software.experiments.gentsp.util.PopulationFactory;
 import cj.software.experiments.gentsp.util.RatingCalculator;
 import cj.software.experiments.gentsp.util.WorldFactory;
+import cj.software.experiments.gentsp.util.spring.SpringContext;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,8 +16,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Window;
@@ -47,6 +52,9 @@ public class GenTspMainController implements Initializable {
     @Autowired
     private RatingCalculator ratingCalculator;
 
+    @Autowired
+    private MatingService matingService;
+
     @FXML
     private BorderPane mainBorder;
 
@@ -59,7 +67,26 @@ public class GenTspMainController implements Initializable {
     @FXML
     private TableColumn<Individual, String> tcolDistanceSum;
 
+    @FXML
+    private TextField tfNumberCycles;
+
+    @FXML
+    private Button btnRun;
+
+    @FXML
+    private Button btnStep;
+
+    @FXML
+    private TextField tfPopulationFitness;
+
+    @FXML
+    private TextField tfCycleCounter;
+
     private WorldPane worldPane;
+
+    private ProblemSetup problemSetup;
+
+    private Population population;
 
     private final Logger logger = LogManager.getFormatterLogger();
 
@@ -76,7 +103,7 @@ public class GenTspMainController implements Initializable {
         Optional<ProblemSetup> optionalProblemSetup = dialog.showAndWait();
         if (optionalProblemSetup.isPresent()) {
             logger.info("new problem setup was defined");
-            ProblemSetup problemSetup = optionalProblemSetup.get();
+            problemSetup = optionalProblemSetup.get();
             int width = problemSetup.getWidth();
             int height = problemSetup.getHeight();
             int numCities = problemSetup.getNumCities();
@@ -85,7 +112,6 @@ public class GenTspMainController implements Initializable {
             logger.info(INT_FORMAT, "world height", height);
             logger.info(INT_FORMAT, "number of cities", numCities);
             logger.info(INT_FORMAT, "population size", populationSize);
-            logger.info(INT_FORMAT, "number of cycles", problemSetup.getMaxGenerations());
             logger.info(INT_FORMAT, "elitism count", problemSetup.getElitismCount());
             logger.info(DOUBLE_FORMAT, "crossover rate", problemSetup.getCrossoverRate());
             logger.info(INT_FORMAT, "tournament size", problemSetup.getTournamentSize());
@@ -94,26 +120,36 @@ public class GenTspMainController implements Initializable {
             World world = worldFactory.createWorld(width, height, numCities);
             logger.info("world created");
             worldPane.setWorld(world);
-            List<City> cities = world.getCities();
 
-            Population population = populationFactory.create(0, populationSize, numCities);
+            Population createdPopulation = populationFactory.create(0, populationSize, numCities);
             logger.info("population created");
-            Map<CityPair, Double> existingDistances = new HashMap<>();
-            ratingCalculator.calcPopulationFitness(population, cities, existingDistances);
-            List<Individual> individuals = ratingCalculator.sortFitness(population);
-            Individual best = individuals.get(0);
-            logger.info("best individual has dist sum  %8.2f and fitness %8.8f", best.getDistanceSum(), best.getFitnessValue());
-            Individual worst = individuals.get(individuals.size() - 1);
-            logger.info("worst individual has dist sum %8.2f and fitness %8.8f", worst.getDistanceSum(), worst.getFitnessValue());
-            logger.info("population has fitness sum                         %8.8f", population.getPopulationFitness());
-            ObservableList<Individual> tableData = FXCollections.observableList(individuals);
-            tblIndividuals.setItems(tableData);
-            if (!individuals.isEmpty()) {
-                tblIndividuals.getSelectionModel().select(0);
-            }
+            this.setPopulation(createdPopulation);
         } else {
             logger.info("that was cancelled");
         }
+    }
+
+    private void setPopulation(Population population) {
+        List<City> cities = worldPane.getWorld().getCities();
+        this.population = population;
+        Map<CityPair, Double> existingDistances = new HashMap<>();
+        ratingCalculator.calcPopulationFitness(population, cities, existingDistances);
+        List<Individual> individuals = ratingCalculator.sortFitness(population);
+        Individual best = individuals.get(0);
+        logger.info("best individual has dist sum  %8.2f and fitness %8.8f", best.getDistanceSum(), best.getFitnessValue());
+        Individual worst = individuals.get(individuals.size() - 1);
+        logger.info("worst individual has dist sum %8.2f and fitness %8.8f", worst.getDistanceSum(), worst.getFitnessValue());
+        logger.info("population has fitness sum                         %8.8f", population.getPopulationFitness());
+        ObservableList<Individual> tableData = FXCollections.observableList(individuals);
+        tblIndividuals.setItems(tableData);
+        if (!individuals.isEmpty()) {
+            tblIndividuals.getSelectionModel().select(0);
+        }
+        double populationFitness = population.getPopulationFitness();
+        String formatted = String.format("%7.6f", populationFitness);
+        tfPopulationFitness.setText(formatted);
+        formatted = String.format("%d", problemSetup.getCycleCounter());
+        tfCycleCounter.setText(formatted);
     }
 
     @Override
@@ -136,5 +172,28 @@ public class GenTspMainController implements Initializable {
                 worldPane.setCurrentIndividual(newValue);
             }
         });
+        TextFieldFormatter textFieldFormatter = SpringContext.getBean(TextFieldFormatter.class);
+        textFieldFormatter.initInt(tfNumberCycles, 10000);
+        tfNumberCycles.editableProperty().bind(worldPane.worldProperty().isNotNull());
+        btnRun.disableProperty().bind(worldPane.worldProperty().isNull());
+        btnStep.disableProperty().bind(worldPane.worldProperty().isNull());
+    }
+
+    @FXML
+    public void step() {
+        logger.info("perform 1 step...");
+        int cycleCounter = problemSetup.incCycleCounter();
+        double crossoverRate = problemSetup.getCrossoverRate();
+        int elitismCount = problemSetup.getElitismCount();
+        int tournamentSize = problemSetup.getTournamentSize();
+        double mutationRate = problemSetup.getMutationRate();
+        Population newPopulation = matingService.crossOver(
+                this.population,
+                crossoverRate,
+                elitismCount,
+                tournamentSize,
+                cycleCounter,
+                mutationRate);
+        this.setPopulation(newPopulation);
     }
 }

@@ -83,8 +83,8 @@ class IndividualTest {
         softy.assertThat(instance.getFitnessValue()).as("fitness value").isEqualTo(fitnessValue);
         softy.assertAll();
 
-        instance.setGene(3, 25);
-        assertThat(instance.getGene(3)).as("gene[3]").isEqualTo(25);
+        instance.setChromosome(3, 25);
+        assertThat(instance.getChromosome(3)).as("gene[3]").isEqualTo(25);
     }
 
     @Test

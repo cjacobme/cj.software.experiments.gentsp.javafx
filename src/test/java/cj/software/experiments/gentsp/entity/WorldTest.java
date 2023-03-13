@@ -77,7 +77,7 @@ class WorldTest {
     }
 
     @Test
-    public void addFourCities() {
+    void addFourCities() {
         Collection<City> cities = List.of(
                 City.builder().withX(3).withY(4).build(),
                 City.builder().withX(13).withY(12).build(),

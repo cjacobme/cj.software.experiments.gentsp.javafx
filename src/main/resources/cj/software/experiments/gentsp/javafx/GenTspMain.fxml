@@ -21,4 +21,30 @@
             </columns>
         </TableView>
     </right>
+    <left>
+        <GridPane hgap="5" vgap="5" BorderPane.alignment="CENTER">
+            <Label text="number of cycles" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="tfNumberCycles" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Button fx:id="btnRun" text="Run" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+            <Label text="1 Cycle" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Button fx:id="btnStep" onAction="#step" text="Step" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         <Label text="Population Fitness" GridPane.rowIndex="3" />
+         <TextField fx:id="tfPopulationFitness" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <Label text="Cycle #" GridPane.rowIndex="2" />
+         <TextField fx:id="tfCycleCounter" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+    </left>
 </BorderPane>

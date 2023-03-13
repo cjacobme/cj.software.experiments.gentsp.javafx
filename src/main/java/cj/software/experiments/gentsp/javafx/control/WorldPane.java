@@ -5,6 +5,8 @@ import cj.software.experiments.gentsp.entity.Individual;
 import cj.software.experiments.gentsp.entity.World;
 import cj.software.experiments.gentsp.util.GeometryUtil;
 import cj.software.experiments.gentsp.util.spring.SpringContext;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -18,7 +20,7 @@ import java.util.List;
 public class WorldPane extends Region {
     private final Canvas canvas = new Canvas();
 
-    private World world;
+    private final ObjectProperty<World> worldProperty = new SimpleObjectProperty<>();
 
     private Individual currentIndividual;
 
@@ -29,9 +31,17 @@ public class WorldPane extends Region {
     }
 
     public void setWorld(World world) {
-        this.world = world;
+        worldProperty.set(world);
         this.currentIndividual = null;
         draw();
+    }
+
+    public World getWorld() {
+        return worldProperty.get();
+    }
+
+    public ObjectProperty<World> worldProperty() {
+        return worldProperty;
     }
 
     public void setCurrentIndividual(Individual currentIndividual) {
@@ -63,6 +73,7 @@ public class WorldPane extends Region {
         gc.setFill(Color.LIGHTGRAY);
         try {
             gc.fillRect(0, 0, paneWidth, paneHeight);
+            World world = getWorld();
             int worldWidth = world.getWidth();
             int worldHeight = world.getHeight();
             double widthRatio = paneWidth / worldWidth;
@@ -75,6 +86,7 @@ public class WorldPane extends Region {
 
     private void drawWorld(GraphicsContext gc, double widthRatio, double heightRatio) {
         GeometryUtil geometryUtil = SpringContext.getBean(GeometryUtil.class);
+        World world = getWorld();
         List<City> cities = world.getCities();
         gc.setFill(Color.BLACK);
         double lengthHalf = City.DIAMETER / 2.0;
