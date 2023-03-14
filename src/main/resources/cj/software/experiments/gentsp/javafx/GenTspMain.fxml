@@ -1,60 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cj.software.experiments.gentsp.javafx.GenTspMainController"
-            maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+            minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cj.software.experiments.gentsp.javafx.GenTspMainController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" onAction="#newProblem" text="New Problem..." />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
+                <MenuItem mnemonicParsing="false" onAction="#newProblem" text="New Problem..."/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Exit"/>
             </Menu>
         </MenuBar>
     </top>
     <center>
         <TabPane>
             <Tab closable="false" text="Routing">
-                <BorderPane fx:id="mainBorder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" >
+                <BorderPane fx:id="mainBorder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0">
                     <right>
-                        <TableView fx:id="tblIndividuals" maxHeight="1.7976931348623157E308" prefHeight="1000.0" prefWidth="175.0">
+                        <TableView fx:id="tblIndividuals" maxHeight="1.7976931348623157E308" prefHeight="1000.0"
+                                   prefWidth="175.0">
                             <columns>
-                                <TableColumn fx:id="tcolCycle" editable="false" prefWidth="75.0" sortable="false" text="Cycle" />
-                                <TableColumn fx:id="tcolDistanceSum" editable="false" maxWidth="1.7976931348623157E308" prefWidth="90.0" sortable="false" text="Distance Sum" />
+                                <TableColumn fx:id="tcolCycle" editable="false" prefWidth="75.0" sortable="false"
+                                             text="Cycle"/>
+                                <TableColumn fx:id="tcolDistanceSum" editable="false" maxWidth="1.7976931348623157E308"
+                                             prefWidth="90.0" sortable="false" text="Distance Sum"/>
                             </columns>
                         </TableView>
                     </right>
                     <left>
                         <GridPane hgap="5" vgap="5" BorderPane.alignment="CENTER">
-                            <Label text="number of cycles" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                            <TextField fx:id="tfNumberCycles" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                            <Button fx:id="btnRun" onAction="#runCycles" text="Run" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                            <Label text="number of cycles" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="tfNumberCycles" alignment="CENTER_RIGHT" GridPane.columnIndex="1"
+                                       GridPane.rowIndex="0"/>
+                            <Button fx:id="btnRun" onAction="#runCycles" text="Run" GridPane.columnIndex="2"
+                                    GridPane.rowIndex="0"/>
 
-                            <Label text="1 Cycle" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                            <Button fx:id="btnStep" onAction="#step" text="Step" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                            <Label text="Population Fitness" GridPane.rowIndex="3" />
-                            <TextField fx:id="tfPopulationFitness" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                            <Label text="Cycle #" GridPane.rowIndex="2" />
-                            <TextField fx:id="tfCycleCounter" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="1 Cycle" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Button fx:id="btnStep" onAction="#step" text="Step" GridPane.columnIndex="2"
+                                    GridPane.rowIndex="1"/>
+                            <Label text="Population Fitness" GridPane.rowIndex="3"/>
+                            <TextField fx:id="tfPopulationFitness" alignment="CENTER_RIGHT" editable="false"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                            <Label text="Cycle #" GridPane.rowIndex="2"/>
+                            <TextField fx:id="tfCycleCounter" alignment="CENTER_RIGHT" editable="false"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                             <columnConstraints>
-                                <ColumnConstraints />
-                                <ColumnConstraints />
-                                <ColumnConstraints hgrow="ALWAYS" />
+                                <ColumnConstraints/>
+                                <ColumnConstraints/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
+                                <RowConstraints/>
                             </rowConstraints>
                         </GridPane>
                     </left>
                 </BorderPane>
             </Tab>
             <Tab closable="false" text="Charts">
+                <VBox spacing="5.0">
+                    <LineChart fx:id="chartPopulationFitness" createSymbols="false" title="Population fitness">
+                        <xAxis>
+                            <NumberAxis label="Cycle" side="BOTTOM"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis side="LEFT"/>
+                        </yAxis>
+                    </LineChart>
+                    <LineChart fx:id="chartDistanceSums" title="Distance sum" createSymbols="false">
+                        <xAxis>
+                            <NumberAxis label="Cycle" side="BOTTOM"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis side="LEFT"/>
+                        </yAxis>
+                    </LineChart>
+                </VBox>
             </Tab>
         </TabPane>
     </center>

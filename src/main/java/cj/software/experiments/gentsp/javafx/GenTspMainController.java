@@ -15,6 +15,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
@@ -78,6 +80,12 @@ public class GenTspMainController implements Initializable {
     @FXML
     private TextField tfCycleCounter;
 
+    @FXML
+    private LineChart<Integer, Double> chartPopulationFitness;
+
+    @FXML
+    private LineChart<Integer, Double> chartDistanceSums;
+
     private WorldPane worldPane;
 
     private ProblemSetup problemSetup;
@@ -85,6 +93,12 @@ public class GenTspMainController implements Initializable {
     private Population population;
 
     private final Logger logger = LogManager.getFormatterLogger();
+
+    private XYChart.Series<Integer, Double> seriesPopulationFitness;
+
+    private XYChart.Series<Integer, Double> seriesBestDistanceSum;
+
+    private XYChart.Series<Integer, Double> seriesWorstDistanceSum;
 
     @FXML
     public void exitApplication() {
@@ -141,11 +155,26 @@ public class GenTspMainController implements Initializable {
         reportCycleResults(individuals, populationFitness, cycleCounter);
     }
 
-    private void reportCycleResults(List<Individual> individuals, double populationFitness, int cycleCounter) {
+    private void reportCycleResults(
+            List<Individual> individuals,
+            double populationFitness,
+            int cycleCounter) {
         ObservableList<Individual> tableData = FXCollections.observableList(individuals);
         tblIndividuals.setItems(tableData);
         if (!individuals.isEmpty()) {
             tblIndividuals.getSelectionModel().select(0);
+            if ((cycleCounter % 10) == 0) {
+                XYChart.Data<Integer, Double> popFitnessData = new XYChart.Data<>(cycleCounter, populationFitness);
+                seriesPopulationFitness.getData().add(popFitnessData);
+                Individual best = individuals.get(0);
+                double bestDistanceSum = best.getDistanceSum();
+                XYChart.Data<Integer, Double> bestSumData = new XYChart.Data<>(cycleCounter, bestDistanceSum);
+                seriesBestDistanceSum.getData().add(bestSumData);
+                Individual worst = individuals.get(individuals.size() - 1);
+                double worstDistanceSum = worst.getDistanceSum();
+                XYChart.Data<Integer, Double> worstSumData = new XYChart.Data<>(cycleCounter, worstDistanceSum);
+                seriesWorstDistanceSum.getData().add(worstSumData);
+            }
         }
         String formatted = String.format("%7.6f", populationFitness);
         tfPopulationFitness.setText(formatted);
@@ -178,6 +207,15 @@ public class GenTspMainController implements Initializable {
         tfNumberCycles.editableProperty().bind(worldPane.worldProperty().isNotNull());
         btnRun.disableProperty().bind(worldPane.worldProperty().isNull());
         btnStep.disableProperty().bind(worldPane.worldProperty().isNull());
+        seriesPopulationFitness = new XYChart.Series<>();
+        seriesPopulationFitness.setName("fitness sum");
+        chartPopulationFitness.getData().add(seriesPopulationFitness);
+        seriesBestDistanceSum = new XYChart.Series<>();
+        seriesBestDistanceSum.setName("Best");
+        seriesWorstDistanceSum = new XYChart.Series<>();
+        seriesWorstDistanceSum.setName("Worst");
+        chartDistanceSums.getData().add(seriesWorstDistanceSum);
+        chartDistanceSums.getData().add(seriesBestDistanceSum);
     }
 
     @FXML
