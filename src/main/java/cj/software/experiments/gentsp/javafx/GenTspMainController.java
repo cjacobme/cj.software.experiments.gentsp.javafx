@@ -126,15 +126,6 @@ public class GenTspMainController implements Initializable {
     }
 
     private void setPopulation(Population population) {
-        if (this.population != null) {
-            List<Individual> currentRated = ratingCalculator.sortFitness(this.population);
-            double currentDistSum = currentRated.get(0).getDistanceSum();
-            List<Individual> newRated = ratingCalculator.sortFitness(population);
-            double newDistSum = newRated.get(0).getDistanceSum();
-            if (newDistSum > currentDistSum) {
-                logger.error("Oops");
-            }
-        }
         List<City> cities = worldPane.getWorld().getCities();
         this.population = population;
         Map<CityPair, Double> existingDistances = new HashMap<>();
@@ -145,15 +136,20 @@ public class GenTspMainController implements Initializable {
         Individual worst = individuals.get(individuals.size() - 1);
         logger.info("worst individual has dist sum %8.2f and fitness %8.8f", worst.getDistanceSum(), worst.getFitnessValue());
         logger.info("population has fitness sum                         %8.8f", population.getPopulationFitness());
+        double populationFitness = population.getPopulationFitness();
+        int cycleCounter = problemSetup.getCycleCounter();
+        reportCycleResults(individuals, populationFitness, cycleCounter);
+    }
+
+    private void reportCycleResults(List<Individual> individuals, double populationFitness, int cycleCounter) {
         ObservableList<Individual> tableData = FXCollections.observableList(individuals);
         tblIndividuals.setItems(tableData);
         if (!individuals.isEmpty()) {
             tblIndividuals.getSelectionModel().select(0);
         }
-        double populationFitness = population.getPopulationFitness();
         String formatted = String.format("%7.6f", populationFitness);
         tfPopulationFitness.setText(formatted);
-        formatted = String.format("%d", problemSetup.getCycleCounter());
+        formatted = String.format("%d", cycleCounter);
         tfCycleCounter.setText(formatted);
     }
 
@@ -228,15 +224,9 @@ public class GenTspMainController implements Initializable {
                 @Override
                 public void run() {
                     List<Individual> individuals = event.getIndividualsSorted();
-                    ObservableList<Individual> tableData = FXCollections.observableList(individuals);
-                    tblIndividuals.setItems(tableData);
-                    if (!individuals.isEmpty()) {
-                        tblIndividuals.getSelectionModel().select(0);
-                    }
-                    String formatted = String.format("%7.6f", event.getPopulationFitness());
-                    tfPopulationFitness.setText(formatted);
-                    formatted = String.format("%d", event.getCycleCounter());
-                    tfCycleCounter.setText(formatted);
+                    double populationFitness = event.getPopulationFitness();
+                    int cycleCounter = event.getCycleCounter();
+                    reportCycleResults(individuals, populationFitness, cycleCounter);
                 }
             });
         }

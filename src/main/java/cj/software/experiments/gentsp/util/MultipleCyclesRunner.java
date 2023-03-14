@@ -83,10 +83,7 @@ public class MultipleCyclesRunner implements Runnable {
             List<Individual> individualsSorted,
             int totalCycleCounter,
             double populationFitness) {
-        List<MultipleCyclesListener> clone;
-        synchronized (this) {
-            clone = new ArrayList<>(this.multipleCyclesListeners);
-        }
+        List<MultipleCyclesListener> clone = cloneListeners();
         MultipleCyclesEvent event = MultipleCyclesEvent.builder()
                 .withPopulation(population)
                 .withIndividualsSorted(individualsSorted)
@@ -98,11 +95,16 @@ public class MultipleCyclesRunner implements Runnable {
         }
     }
 
-    private void fireAllCyclesFinished() {
-        List<MultipleCyclesListener> clone;
+    private List<MultipleCyclesListener> cloneListeners() {
+        List<MultipleCyclesListener> result;
         synchronized (this) {
-            clone = new ArrayList<>(this.multipleCyclesListeners);
+            result = new ArrayList<>(this.multipleCyclesListeners);
         }
+        return result;
+    }
+
+    private void fireAllCyclesFinished() {
+        List<MultipleCyclesListener> clone = cloneListeners();
         for (MultipleCyclesListener listener : clone) {
             listener.allCyclesFinished();
         }
