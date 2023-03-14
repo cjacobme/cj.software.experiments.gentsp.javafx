@@ -74,11 +74,13 @@ public class WorldPane extends Region {
         try {
             gc.fillRect(0, 0, paneWidth, paneHeight);
             World world = getWorld();
-            int worldWidth = world.getWidth();
-            int worldHeight = world.getHeight();
-            double widthRatio = paneWidth / worldWidth;
-            double heightRatio = paneHeight / worldHeight;
-            drawWorld(gc, widthRatio, heightRatio);
+            if (world != null) {
+                int worldWidth = world.getWidth();
+                int worldHeight = world.getHeight();
+                double widthRatio = paneWidth / worldWidth;
+                double heightRatio = paneHeight / worldHeight;
+                drawWorld(gc, widthRatio, heightRatio);
+            }
         } finally {
             gc.setFill(oldFill);
         }
