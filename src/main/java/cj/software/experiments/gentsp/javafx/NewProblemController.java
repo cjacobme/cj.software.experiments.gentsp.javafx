@@ -47,9 +47,9 @@ public class NewProblemController implements Initializable {
         textFieldFormatter.initInt(tfWorldHeight, 100);
         textFieldFormatter.initInt(tfNumberCities, 100);
         textFieldFormatter.initInt(tfPopulationSize, 100);
-        textFieldFormatter.initInt(tfElitismCount, 2);
+        textFieldFormatter.initInt(tfElitismCount, 20);
         textFieldFormatter.initDouble(tfCrossoverRate, 0.9);
-        textFieldFormatter.initInt(tfTournamentSize, 3);
+        textFieldFormatter.initInt(tfTournamentSize, 10);
         textFieldFormatter.initDouble(tfMutationRate, 0.009);
 
         Platform.runLater(new Runnable() {

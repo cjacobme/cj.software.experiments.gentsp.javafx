@@ -95,20 +95,20 @@ public class MatingService {
         List<Individual> sourceIndividuals = this.ratingCalculator.sortFitness(source);
         int individualsCount = sourceIndividuals.size();
         Individual[] newIndividuals = new Individual[individualsCount];
-        for (int iIndividual = 0; iIndividual < individualsCount; iIndividual++) {
+        for (int iIndividual = 0; iIndividual < elitismCount; iIndividual++) {
+            newIndividuals[iIndividual] = sourceIndividuals.get(iIndividual);
+        }
+        for (int iIndividual = elitismCount; iIndividual < individualsCount; iIndividual++) {
             Individual parent1 = sourceIndividuals.get(iIndividual);
             double randomValue = randomUtil.nextRandomValue();
-            if (randomValue < crossOverRate && iIndividual >= elitismCount) {
+            if (randomValue < crossOverRate) {
                 Individual parent2 = selectParent(source, tournamentSize);
                 Individual offspring = mate(cycleCounter, iIndividual, parent1, parent2);
+                mutate(offspring, elitismCount, mutationRate);
                 newIndividuals[iIndividual] = offspring;
             } else {
                 newIndividuals[iIndividual] = parent1;
             }
-        }
-
-        for (Individual individual : newIndividuals) {
-            mutate(individual, elitismCount, mutationRate);
         }
 
         Population result = Population.builder()
