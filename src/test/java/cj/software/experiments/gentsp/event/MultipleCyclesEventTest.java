@@ -72,7 +72,7 @@ class MultipleCyclesEventTest {
         softy.assertThat(instance.getPopulationFitness()).as("population fitness").isEqualTo(populationFitness);
         softy.assertThat(instance.getCycleCounter()).as("cycle counter").isEqualTo(cycleCounter);
         softy.assertThat(instance.getIndividualsSorted()).as("individuals").isEqualTo(individuals);
-        softy.assertThat(instance.getPopulationFitness()).as("population").isSameAs(population);
+        softy.assertThat(instance.getPopulation()).as("population").isSameAs(population);
         softy.assertAll();
     }
 
